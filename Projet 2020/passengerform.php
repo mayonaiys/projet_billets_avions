@@ -37,35 +37,35 @@
             for($i=1; $i<=$nbPassenger;$i++)
             {
                 echo "<br><div style='margin-left: 3%;'><h3>Informations Passager $i</h3><br>";
-                $nom='nom'.$i;
+                $nom='name'.$i;
                 $prenom='prenom'.$i;
                 $mail='mail'.$i;
                 $date='birth'.$i;
 
                 echo "
                     <label>Nom </label>
-                    <input name='$nom' style='margin-right: 5%'>
+                    <input id='$nom' style='margin-right: 5%'>
                     
               
 
                     <label>Prénom </label>
-                    <input name='$prenom' style='margin-right: 5%'> 
+                    <input id='$prenom' style='margin-right: 5%'> 
                                        
                     
                 
                     <label>Mail </label>
-                    <input name='$mail' style='margin-right: 5%'>
+                    <input id='$mail' style='margin-right: 5%'>
                                         
                     
 
                     <label>Date de naissance</label>
-                    <input type='date' name='$date' value='' >
+                    <input type='date' id='$date' value='' >
                 
                 </div>
                     <br><br>
                 ";
             }
-            echo "<button type='submit' id='valider' class='btn btn-primary'  style='margin-left: 45%; margin-bottom: 10px;'>Valider</button> "
+            echo "<button type='submit' id='valid' class='btn btn-primary'  style='margin-left: 45%; margin-bottom: 10px;'>Valider</button> "
         ?>
     </form>
 

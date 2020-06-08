@@ -28,7 +28,7 @@
 
 </header>
 
-<div class="container-fluid " style="margin-top: 5%;" >
+<div class="container-fluid " style="margin-top: 2%;" >
     <div class="card"  style="width: 60%; margin: auto; border-radius: 10px; background-color: rgba(255, 255, 255,0.9); ">
         <div class="card-body"  >
             <form id = "fly_form" action="controller.php?function=name" method="get">
@@ -49,7 +49,7 @@
 
                         <div class="row" >
                             <label for="start" style="margin-right:5px;">Passager total</label>
-                            <input type="number" max="9" id="nbPassagerTotal" />
+                            <input type="number" max="9" id="nbPassengerTot" />
                         </div>
                     </div>
 
@@ -66,14 +66,14 @@
                         <div class="row" style="float: right; margin-top: 12%; margin-bottom: 12%;">
                             <label for="start" style="margin-right:5px;">Prix </label>
                             <div style="float: right; margin-top: 5px;">
-                                <input type="range" multiple value="10,80" />
+                                <input type="range" multiple value="10,80" id="rangePrice"/>
                             </div>
                         </div>
                         <br><br>
 
                         <div class="row" style="float: right;">
                             <label for="start" style="margin-right:5px;">Passager -4 ans</label>
-                            <input type="number" max="8" id="nbPassagerEnfant" />
+                            <input type="number" max="8" id="nbPassengerChild" />
                         </div>
 
                     </div>
@@ -82,7 +82,7 @@
                 <br>
                 <div class="row">
 
-                    <button type="submit" id="rechercher" class="btn btn-primary"  style="margin-left: 45%; margin-bottom: 10px;">Rechercher</button>
+                    <button type="submit" id="search" class="btn btn-primary"  style="margin-left: 45%; margin-bottom: 10px;">Rechercher</button>
                 </div>
 
             </form>
