@@ -40,6 +40,12 @@
                             <label for="start" style="margin-right:5px;">Ville d'Arrivé </label>
                             <input type="text" id="arrival" >
                         </div>
+                        <br><br>
+
+                        <div class="row" >
+                            <label for="start" style="margin-right:5px;">Nombre de passager total</label>
+                            <input type="number" max="9" id="nbPassagerTotal" />
+                        </div>
                     </div>
 
                        
@@ -47,23 +53,29 @@
                     <div class="col-md-5"  style="margin:20px;">
                         <div class="row" style="float: right; margin-bottom: 11%;">
                             <label for="start" style="margin-right:5px;">Date </label>
-                            <input type="date" id="start" name="trip-start" value="" min="2020-01-01" max="">
+                            <input type="date" id="date" name="trip-start" value="" min="2020-01-01" max="">
 
                         </div>
                         <br><br>
 
                         <div class="row" style="float: right;">
-                            <label for="start" style="margin-right:5px;">Nombre de passager </label>
-                            <input type="number" max="9" />
+                            <h6>METTRE SLIDER</h6>
+                            
+                        </div>
+                        <br><br>
+
+                        <div class="row" style="float: right;">
+                            <label for="start" style="margin-right:5px;">Passager -4 ans</label>
+                            <input type="number" max="8" id="nbPassagerEnfant" />
                         </div>
 
                     </div>
                 </div>
             
-
+                <br>
                 <div class="row">
 
-                    <button type="submit" class="btn btn-primary"  style="margin-left: 45%; margin-bottom: 10px;">Rechercher</button>
+                    <button type="submit" id="rechercher" class="btn btn-primary"  style="margin-left: 45%; margin-bottom: 10px;">Rechercher</button>
                 </div>
 
             </form>
