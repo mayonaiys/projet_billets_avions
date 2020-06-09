@@ -12,8 +12,8 @@ function research() {
 
     tab["depCity"] = document.getElementById("departure").value;
     tab["arrivalCity"] = document.getElementById("arrival").value;
-    tab["nbrPassengers"] = document.getElementById("nbPassengerTot").value;
-    tab["nbrChild"] =document.getElementById("nbPassengerChild").value;
+    tab["nbrAdults"] = parseInt(document.getElementById("nbPassengerAdult").value);
+    tab["nbrChild"] = parseInt(document.getElementById("nbPassengerChild").value);
     tab["depDate"] = document.getElementById("date").value;
     tab["minPrice"] = document.getElementById("rangePrice").valueLow;
     tab["maxPrice"] = document.getElementById("rangePrice").valueHigh;
