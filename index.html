@@ -50,8 +50,9 @@
                         <br><br>
 
                         <div class="row" >
-                            <label style="margin-right:5px;">Passager total</label>
-                            <input type="number" max="9" id="nbPassengerTot" />
+
+
+
                         </div>
                     </div>
 
@@ -73,15 +74,55 @@
                         </div>
                         <br><br>
 
-                        <div class="row" style="float: right;">
-                            <label style="margin-right:5px;">Passager -4 ans</label>
-                            <input type="number" max="8" id="nbPassengerChild" />
-                        </div>
+
+
+                       
 
                     </div>
                 </div>
-            
-                <br>
+
+                <div class="row justify-content-center">
+                    <div class="col-md-5" style="margin-left : 200px; padding-bottom : 40px;">
+                    <fieldset>
+                        Nombre de passager :
+                        <ul>
+                            <li>
+                                <label for="start" style="margin-right:5px;">Adulte</label>
+                                <SELECT name="nom" size="1">
+                                    <OPTION>1
+                                    <OPTION>2
+                                    <OPTION>3
+                                    <OPTION>4
+                                    <OPTION>5
+                                    <OPTION>6
+                                    <OPTION>7
+                                    <OPTION>8
+                                    <OPTION>9
+                                </SELECT>
+                            </li>
+
+                            <li>
+
+                                <label for="start" style="margin-right:5px;">Enfant(-4 ans )</label>
+
+                                <SELECT name="nom" size="1">
+                                    <OPTION>1
+                                    <OPTION>2
+                                    <OPTION>3
+                                    <OPTION>4
+                                    <OPTION>5
+                                    <OPTION>6
+                                    <OPTION>7
+                                    <OPTION>8
+                                    <OPTION>9
+                                </SELECT>
+
+                            </li>
+                        </ul>
+                    </fieldset>
+
+                </div>
+                </div>
                 <div class="row">
 
                     <button id="search" class="btn btn-primary" onclick="research()" style="margin-left: 45%; margin-bottom: 10px;">Rechercher</button>
