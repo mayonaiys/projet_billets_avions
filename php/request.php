@@ -1,4 +1,6 @@
 <?php
+include 'controler.php';
+
 session_start();
 
 require("controler.php");
@@ -10,13 +12,10 @@ if(!empty($type)){
     $db = connexbdd();
     if($type=="research"){
         $data = filter_input(INPUT_GET, 'data');
-        $json_array = json_decode($data,true);
-
-
-        echo("ok");
-        //echo("bien reçu : " . print_r($json_array));
+        getAvailableFlights($data);
     }
 
+<<<<<<< HEAD
 
     if($type == "price_range"){
 
@@ -24,3 +23,6 @@ if(!empty($type)){
 }
 
 //SELECT MAX(fare),MIN(fare) FROM `fares` WHERE 1
+=======
+}
+>>>>>>> 5c37212a6ef91f443e3d29501213a218236e5747

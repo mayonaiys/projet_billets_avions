@@ -1,5 +1,3 @@
-
-
 function ajaxRequest(type, url, callback, data = null){
 
     let xhr = new XMLHttpRequest();
@@ -31,8 +29,10 @@ function ajaxRequest(type, url, callback, data = null){
 
 function httpErrors(errorCode){
     switch (errorCode) {
-        case 200:break;
-        case 201:break;
+        case 200:
+            break;
+        case 201:
+            break;
         case 400: alert("Bad Request");
             break;
         case 401: alert("Unauthorized");
