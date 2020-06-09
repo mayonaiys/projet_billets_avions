@@ -2,7 +2,7 @@
 $(document).ready(function () {
 
     //ajaxRequest("GET", "php/request.php",recieve);
-
+    ajaxRequest("GET", "php/request.php",updatePrice);
 
 });
 
@@ -29,4 +29,8 @@ function recieve(message){
     }else{
         alert(message);
     }
+}
+
+function updatePrice(message) {
+
 }
