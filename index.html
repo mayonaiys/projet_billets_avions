@@ -10,11 +10,13 @@
          <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
          <link rel="stylesheet" href="css/multirange.css">
+         <script src="js/ajax.js"></script>
          <script src="js/multirange.js"></script>
 
 
     </head>
-<body style="background-image:url(./data/backgroung.jpg); background-size: cover;">
+
+<body style="background-image:url('/data/backgroung.jpg'); background-size: cover;">
 
 <!--HEADER-->
 
@@ -31,25 +33,29 @@
 <div class="container-fluid " style="margin-top: 2%;" >
     <div class="card"  style="width: 60%; margin: auto; border-radius: 10px; background-color: rgba(255, 255, 255,0.9); ">
         <div class="card-body"  >
-            <form id = "fly_form" action="controller.php?function=name" method="get">
                 <div class="row" >
 
 
                     <div class="col-md-5" style="margin:20px; margin-left: 6%;">
                         <div class="row">
-                            <label for="start" style="margin-right:5px;">Ville de départ </label>
+                            <label style="margin-right:5px;">Ville de départ </label>
                             <input type="text" id="departure" >
                         </div>
                         <br><br>
                         <div class="row">
-                            <label for="start" style="margin-right:5px;">Ville d'Arrivé </label>
+                            <label style="margin-right:5px;">Ville d'Arrivée </label>
                             <input type="text" id="arrival" >
                         </div>
                         <br><br>
 
                         <div class="row" >
+<<<<<<< HEAD
 
 
+=======
+                            <label style="margin-right:5px;">Passager total</label>
+                            <input type="number" max="9" id="nbPassengerTot" />
+>>>>>>> d8c9ce9d6ef9493daebcdc771d379da991796aeb
                         </div>
                     </div>
 
@@ -57,21 +63,28 @@
 
                     <div class="col-md-5"  style="margin:20px;">
                         <div class="row" style="float: right;">
-                            <label for="start" style="margin-right:5px;">Date </label>
-                            <input type="date" id="date" name="trip-start" value="" min="2020-01-01" max="">
+                            <label style="margin-right:5px;">Date </label>
+                            <input type="date" id="date" value="" min="2020-01-01" max="">
 
                         </div>
                         <br><br>
 
                         <div class="row" style="float: right; margin-top: 12%; margin-bottom: 12%;">
-                            <label for="start" style="margin-right:5px;">Prix </label>
+                            <label style="margin-right:5px;">Prix </label>
                             <div style="float: right; margin-top: 5px;">
                                 <input type="range" multiple value="10,80" id="rangePrice"/>
                             </div>
                         </div>
                         <br><br>
 
+<<<<<<< HEAD
 
+=======
+                        <div class="row" style="float: right;">
+                            <label style="margin-right:5px;">Passager -4 ans</label>
+                            <input type="number" max="8" id="nbPassengerChild" />
+                        </div>
+>>>>>>> d8c9ce9d6ef9493daebcdc771d379da991796aeb
 
                     </div>
                 </div>
@@ -120,10 +133,9 @@
                 </div>
                 <div class="row">
 
-                    <button type="submit" id="search" class="btn btn-primary"  style="margin-left: 45%; margin-bottom: 10px;">Rechercher</button>
+                    <button id="search" class="btn btn-primary"  style="margin-left: 45%; margin-bottom: 10px;">Rechercher</button>
                 </div>
 
-            </form>
         </div>
     </div>
 </div>
