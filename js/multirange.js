@@ -129,5 +129,22 @@ if (typeof module === "undefined") {
 	module.exports = multirange;
 }
 
+
+
 })();
 
+$(document).ready(function () {
+
+	let list = document.querySelectorAll('.multirange');
+
+	for(let i=0; i<list.length; i++){
+		list[i].addEventListener('input',function () {
+			let input = document.getElementById("rangePrice");
+
+			document.getElementById("min_value").innerHTML = input.valueLow;
+			document.getElementById("max_value").innerHTML = input.valueHigh;
+
+		});
+	}
+
+});
