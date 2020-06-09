@@ -2,7 +2,17 @@
 $(document).ready(function () {
 
     //ajaxRequest("GET", "php/request.php",recieve);
-    ajaxRequest("GET", "php/request.php",updatePrice);
+    ajaxRequest("GET", "php/request.php",function(data){
+        if(data != ""){
+            let json = JSON.parse(data);
+            document.getElementById("rangePrice").dataset["min"] = json["min"];
+            document.getElementById("rangePrice").dataset["max"] = json["max"];
+
+
+            document.getElementById("min_value").innerHTML = json["min"];
+            document.getElementById("max_value").innerHTML = json["max"];
+        }
+    },"type=price_range");
 
     document.getElementById("departure").addEventListener('input', function () {
         let val = this.value;

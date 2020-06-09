@@ -77,10 +77,12 @@
 
                     <br>
 
-                    <div>
+                    <div style="width:100%;display: flex;justify-content: space-around">
                         <label style="margin-right:10px;">Prix </label>
                         <span id="min_value" >10</span>
-                        <input type="range" multiple value="10,80" id="rangePrice"/>
+                        <div>
+                            <input type="range" multiple value="0,100" id="rangePrice" data-min="0" data-max="100"/>
+                        </div>
                         <span id="max_value" >80</span>
                     </div>
 

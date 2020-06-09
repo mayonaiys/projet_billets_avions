@@ -139,6 +139,14 @@ function getCities($db,$data){
 
     return $request->fetchAll(PDO::FETCH_ASSOC);
 }
+
+function getPriceRange($db){
+    $request = $db->prepare('SELECT MIN(fare) as min,MAX(fare) as max FROM fares');
+    $request->execute();
+
+    return $request->fetch(PDO::FETCH_ASSOC);
+
+}
 /*$json ='{"depCity" : "Edmonton", "arrivalCity" : "Quebec", "nbrAdults" : 5, "nbrChildren" : 2, "depDate" : "2020-06-15", "minPrice" : 100, "maxPrice" : 2000}';
 $json2 = '{"ID":"CA184"}';
 getAvailableFlights($json);

@@ -14,7 +14,7 @@ if(!empty($type)){
     }
 
     if($type == "price_range"){
-
+        echo(json_encode(getPriceRange($db)));
     }
 
     if($type == "completion"){
