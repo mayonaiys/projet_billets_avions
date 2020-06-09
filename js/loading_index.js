@@ -24,5 +24,9 @@ function research() {
 }
 
 function recieve(message){
-    alert(message);
+    if(message == "ok"){
+        window.location.href = "reservation.html";
+    }else{
+        alert(message);
+    }
 }

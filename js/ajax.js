@@ -4,14 +4,16 @@ function ajaxRequest(type, url, callback, data = null){
 
     let xhr = new XMLHttpRequest();
 
+    if(type !== "POST"){
+        if(data != null){
+            url+="?"+data;
+        }
+    }
+
     xhr.open(type, url);
 
     if(type === "POST"){
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    }else{
-        if(data != null){
-            url+="?"+data;
-        }
     }
 
     xhr.onload = () => {
@@ -29,19 +31,19 @@ function ajaxRequest(type, url, callback, data = null){
 
 function httpErrors(errorCode){
     switch (errorCode) {
-        case 200:
-        case 201:
-        case 400: window.open("Bad Request");
+        case 200:break;
+        case 201:break;
+        case 400: alert("Bad Request");
             break;
-        case 401: window.open("Unauthorized");
+        case 401: alert("Unauthorized");
             break;
-        case 403: window.open("Forbidden");
+        case 403: alert("Forbidden");
             break;
-        case 404: window.open("Not Found");
+        case 404: alert("Not Found");
             break;
-        case 500: window.open("Server Error");
+        case 500: alert("Server Error");
             break;
-        case 503: window.open("Server Unavailable");
+        case 503: alert("Server Unavailable");
              break;
              default:
              }
