@@ -30,7 +30,6 @@
 <br>
 
 <div class="container-fluid " style="width: 90%; margin: auto; border-radius: 10px; background-color: rgba(255, 255, 255,0.9); ">
-    <form id = "passenger_form" action="controller.php?function=name" method="get">
         <?php
             $nbPassenger=3;
 
@@ -67,6 +66,5 @@
             }
             echo "<button type='submit' id='valid' class='btn btn-primary'  style='margin-left: 45%; margin-bottom: 10px;'>Valider</button> "
         ?>
-    </form>
 
 </div>
