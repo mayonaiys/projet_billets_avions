@@ -18,11 +18,11 @@ function research() {
     tab["minPrice"] = document.getElementById("rangePrice").valueLow;
     tab["maxPrice"] = document.getElementById("rangePrice").valueHigh;
 
-    let string = JSON.stringify(tab);
-    //ajaxRequest("GET", "php/request.php",recieve,JSON.stringify(tab));
+    //let string = JSON.stringify(tab);
+    ajaxRequest("GET", "php/request.php",recieve,"type=research&data="+JSON.stringify(tab));
 
 }
 
 function recieve(message){
-
+    alert(message);
 }

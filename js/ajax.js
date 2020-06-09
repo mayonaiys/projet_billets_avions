@@ -10,7 +10,7 @@ function ajaxRequest(type, url, callback, data = null){
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     }else{
         if(data != null){
-            url+="?type="+data;
+            url+="?"+data;
         }
     }
 
