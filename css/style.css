@@ -138,3 +138,14 @@
 		background: #ddd;
 	}
 }
+
+.my-custom-scrollbar {
+	position: relative;
+	min-height: 420px;
+	max-height: 420px;
+	overflow: auto;
+}
+
+.table-wrapper-scroll-y {
+	display: block;
+}

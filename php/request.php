@@ -10,7 +10,6 @@ if(!empty($type)){
 
     if($type=="research"){
         $data = filter_input(INPUT_GET, 'data');
-        print_r($data);
         getAvailableFlights($data);
     }
 

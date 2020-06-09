@@ -48,6 +48,7 @@ function getAvailableFlights($json){
     $request->execute();
 
     $newJson = array();
+    $newResponse = "";
     while(($response = $request->fetch())!=0){
         $fareRequest = $bdd->prepare('SELECT fare FROM fares WHERE route=:route AND dateToDeparture=:dateDep AND weFlights=:weFlights AND fare > :minPrice AND fare < :maxPrice');
         $fareRequest->bindParam(':route', $response['route'], PDO::PARAM_STR);
@@ -71,13 +72,24 @@ function getAvailableFlights($json){
         }
         $fareRequest->bindParam(':weFlights',$weFlights, PDO::PARAM_INT);
         $fareRequest->execute();
+
         if(($fare = $fareRequest->fetch()['fare'])!=0){
-            echo '<p>'.$response['ID']." | ".$response['route']." | ".resolveDay($response['dayOfWeek'])." | ".$response['departureTime']." | ".$response['arrivalTime']." | ".($fare/2)." | ".$fare." | ".($data['nbrAdults']*$fare+$data['nbrChildren']*$fare/2).'</p>';
-            $array = array("ID"=>$response['ID'],"route"=>$response['route'],"date"=>resolveDay($response['dayOfWeek']),"depTime"=>$response['departureTime'],"arrivalTime"=>$response['arrivalTime'],"childrenFare"=>($fare/2),"adultsFare"=>$fare,"totalFare"=>($data['nbrAdults']*$fare+$data['nbrChildren']*$fare/2));
-            array_push($newJson,$array);
+            $temp = '<p style="display: none;">$</p>
+                     <tr>
+                         <td>'.$response['ID'].'</td>
+                         <td>'.$response['route'].'</td>
+                         <td>'.$response['dayOfWeek'].'</td>
+                         <td>'.$response['departureTime'].'</td>
+                         <td>'.$response['arrivalTime'].'</td>
+                         <td>'.($fare/2).'</td>
+                         <td>'.$fare.'</td>
+                         <td>'.($data['nbrAdults']*$fare+$data['nbrChildren']*$fare/2).'</td>
+                     </tr>
+                     ';
+            $newResponse .= $temp;
         }
     }
-    $newData = json_encode($newJson); //Encodage de la réponse
+    echo $newResponse;
 }
 
 function resolveDay($day){
@@ -114,7 +126,6 @@ function getChosenFlight($json){
     $request->execute();
     $flight = $request->fetch();
     $newJson = array("ID"=>$flight['ID'],"originAirport"=>$flight['originAirport'],"destinationAirport"=>$flight['destinationAirport'],"originCity"=>$flight['originCity'],"destinationCity"=>$flight['destinationCity'],"date"=>"date","departureTime"=>$flight['departureTime'],"arrivalTime"=>$flight['arrivalTime']);
-
 }
 
 
