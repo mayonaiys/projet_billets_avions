@@ -1,15 +1,15 @@
 <?php
 
 //Définition des constantes
-define('DB_USER', 'cairline');
-define('DB_PASSWORD', 'mdp');
-define('DB_PATH', 'mysql:dbname=cairline;host=localhost;');
+define('DB_USER', 'root');
+define('DB_PASSWORD', '');
+define('DB_PATH', 'mysql:dbname=projetcir2;host=localhost;');
 
 
 //Connexion base de donnée
-function connexbdd($base,$user,$password){
+function connexbdd(){
     try {
-        $bdd = new PDO($base, $user, $password);
+        $bdd = new PDO(DB_PATH, DB_USER, DB_PASSWORD);
         return $bdd;
     } catch (PDOException $e) {
         echo 'Connexion échouée : ' . $e->getMessage();
@@ -17,13 +17,11 @@ function connexbdd($base,$user,$password){
     }
 }
 
-function getAvailableFlights($json){
+function getAvailableFlights($bdd,$json){
 
     //Décodage du fichier json
     $data = json_decode($json,true);
 
-    //Connexion à la base de données
-    $bdd = connexbdd(DB_PATH,DB_USER,DB_PASSWORD);
 
     //Récupération de la date du jour
     $date = getdate();
@@ -129,6 +127,18 @@ function getChosenFlight($json){
 }
 
 
+function getCities($db,$data){
+
+    $data .= "%";
+
+    $request = $db->prepare('SELECT airportCode,city FROM airport WHERE city like :city or airportCode like :aiportCode limit 10');
+    $request->bindParam(':city', $data, PDO::PARAM_STR);
+    $request->bindParam(':aiportCode', $data, PDO::PARAM_STR);
+    $request->execute();
+
+
+    return $request->fetchAll(PDO::FETCH_ASSOC);
+}
 /*$json ='{"depCity" : "Edmonton", "arrivalCity" : "Quebec", "nbrAdults" : 5, "nbrChildren" : 2, "depDate" : "2020-06-15", "minPrice" : 100, "maxPrice" : 2000}';
 $json2 = '{"ID":"CA184"}';
 getAvailableFlights($json);

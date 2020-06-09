@@ -35,9 +35,14 @@
                 <div class="card-body">
                     <h5 class="card-title">Rechercher un vol :</h5>
                     <label>Ville de départ :</label>
-                    <input type="text" class="form-control mb-2 mr-sm-2" id="departure" placeholder="Ex: Edmonton">
+                    <input list="departure_list" type="text" class="form-control mb-2 mr-sm-2" id="departure" placeholder="Ex: Edmonton">
+                    <datalist id="departure_list">
+                    </datalist>
+
                     <label>Ville d'arrivée :</label>
-                    <input type="text" class="form-control mb-2 mr-sm-2" id="arrival" placeholder="Ex: Quebec">
+                    <input list="arrival_list" type="text" class="form-control mb-2 mr-sm-2" id="arrival" placeholder="Ex: Quebec">
+                    <datalist id="arrival_list">
+                    </datalist>
                     <label>Date </label>
                     <input type="date" class="form-control mb-2 mr-sm-2" id="date" value="" min="2020-01-01" max="">
 
@@ -77,22 +82,6 @@
                         <input type="range" multiple value="10,80" id="rangePrice"/>
                     </div>
 
-<<<<<<< HEAD
-                    <div class="col-md-5"  style="margin:20px;">
-                        <div class="row" style="float: right;">
-                            <label style="margin-right:5px;">Date </label>
-                            <input type="date" id="date" value="" min="2020-01-01" max="">
-
-                        </div>
-                        <br><br>
-
-                        <div class="row" style="float: right; margin-top: 12%; margin-bottom: 12%;">
-                            <label style="margin-right:5px;">Prix </label>
-                            <div style="float: right; margin-top: 5px;">
-                                <input type="range" multiple value="10,500" id="rangePrice"/>
-                            </div>
-                        </div>
-                        <br><br>
                     <br>
 
                     <div class="row justify-content-center">

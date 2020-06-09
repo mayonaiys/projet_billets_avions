@@ -4,6 +4,32 @@ $(document).ready(function () {
     //ajaxRequest("GET", "php/request.php",recieve);
     ajaxRequest("GET", "php/request.php",updatePrice);
 
+    document.getElementById("departure").addEventListener('input', function () {
+        let val = this.value;
+        ajaxRequest("GET", "php/request.php",function(data){
+            $("#departure_list").empty();
+            if(data != ""){
+                let json = JSON.parse(data);
+                for(let i=0; i<json.length; i++){
+                    $("#departure_list").append('<option value="'+json[i]["city"]+' ['+json[i]["airportCode"]+']">');
+                }
+            }
+        },"type=completion&data="+val);
+    });
+
+    document.getElementById("arrival").addEventListener('input', function () {
+        let val = this.value;
+        ajaxRequest("GET", "php/request.php",function(data){
+            $("#arrival_list").empty();
+            if(data != ""){
+                let json = JSON.parse(data);
+                for(let i=0; i<json.length; i++){
+                    $("#arrival_list").append('<option value="'+json[i]["city"]+' ['+json[i]["airportCode"]+']">');
+                }
+            }
+        },"type=completion&data="+val);
+    });
+
 });
 
 
@@ -33,5 +59,5 @@ function displayList(response){
 
 function updatePrice(message) {
 
-    document.getElementById('nbFlights').innerText = ""+it;
+    //document.getElementById('nbFlights').innerText = ""+it;
 }
