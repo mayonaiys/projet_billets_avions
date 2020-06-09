@@ -39,8 +39,6 @@ function getAvailableFlights($json){
     list($yDep,$mDep,$dDep) = explode("-", $dateDeparture);
     $timeStamp = mktime(0,0,0,$mDep,$dDep,$yDep);
     $day = date('w', $timeStamp)-1;
-    echo $day;
-
 
     //Requêtes en fonctions des données insérées par l'utilisateur
     $request = $bdd->prepare('SELECT * FROM flights WHERE originCity=:depCity AND destinationCity=:arrivalCity AND dayOfWeek=:dayOfWeek');
@@ -48,7 +46,6 @@ function getAvailableFlights($json){
     $request->bindParam(':arrivalCity', $data['arrivalCity'], PDO::PARAM_STR);
     $request->bindParam(':dayOfWeek', $day, PDO::PARAM_INT);
     $request->execute();
-    echo " ".$interval;
 
     $newJson = array();
     while(($response = $request->fetch())!=0){
@@ -102,7 +99,28 @@ function resolveDay($day){
     }
 }
 
-$json ='{"depCity" : "Edmonton", "arrivalCity" : "Quebec", "nbrAdults" : 5, "nbrChildren" : 2, "depDate" : "2020-06-15", "minPrice" : 100, "maxPrice" : 2000}';
+//Fonction de récupération des informations de l'avion choisi
+function getChosenFlight($json){
+
+    //Décodage du fichier json
+    $data = json_decode($json,true);
+
+    //Connexion à la base de données
+    $bdd = connexbdd(DB_PATH,DB_USER,DB_PASSWORD);
+
+    //Récupération des informations du vol
+    $request = $bdd->prepare('SELECT * FROM flights WHERE ID=:id');
+    $request->bindParam(':id',$data['ID'], PDO::PARAM_INT);
+    $request->execute();
+    $flight = $request->fetch();
+    $newJson = array("ID"=>$flight['ID'],"originAirport"=>$flight['originAirport'],"destinationAirport"=>$flight['destinationAirport'],"originCity"=>$flight['originCity'],"destinationCity"=>$flight['destinationCity'],"date"=>"date","departureTime"=>$flight['departureTime'],"arrivalTime"=>$flight['arrivalTime']);
+
+}
+
+
+/*$json ='{"depCity" : "Edmonton", "arrivalCity" : "Quebec", "nbrAdults" : 5, "nbrChildren" : 2, "depDate" : "2020-06-15", "minPrice" : 100, "maxPrice" : 2000}';
+$json2 = '{"ID":"CA184"}';
 getAvailableFlights($json);
+getChosenFlight($json2);*/
 
 ?>
