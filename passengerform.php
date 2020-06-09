@@ -14,7 +14,7 @@
 
 
     </head>
-<body style="background-image:url('./datas/backgroung.jpg'); background-size: cover;">
+<body style="background-image:url('./data/backgroung.jpg'); background-size: cover;">
 
 <!--HEADER-->
 
