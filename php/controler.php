@@ -50,9 +50,11 @@ function getAvailableFlights($json){
 
     $newJson = array();
     while(($response = $request->fetch())!=0){
-        $fareRequest = $bdd->prepare('SELECT fare FROM fares WHERE route=:route AND dateToDeparture=:dateDep AND weFlights=:weFlights');
+        $fareRequest = $bdd->prepare('SELECT fare FROM fares WHERE route=:route AND dateToDeparture=:dateDep AND weFlights=:weFlights AND fare > :minPrice AND fare < :maxPrice');
         $fareRequest->bindParam(':route', $response['route'], PDO::PARAM_STR);
         $fareRequest->bindParam(':dateDep', $interval, PDO::PARAM_INT);
+        $fareRequest->bindParam(':minPrice', $data['minPrice'], PDO::PARAM_INT);
+        $fareRequest->bindParam(':maxPrice', $data['maxPrice'], PDO::PARAM_INT);
         if($day >= 0 && $day <= 4){
             $weFlights = 0;
         } else {
@@ -67,7 +69,6 @@ function getAvailableFlights($json){
         }
     }
     $newData = json_encode($newJson); //Encodage de la réponse
-    print_r($newData);
 }
 
 function resolveDay($day){
@@ -89,7 +90,7 @@ function resolveDay($day){
     }
 }
 
-$json ='{"depCity" : "villeune", "arrivalCity" : "villedeux", "nbrAdults" : 5, "nbrChildren" : 2, "depDate" : "2020-06-29", "minPrice" : "min", "maxPrice" : "max"}';
+$json ='{"depCity" : "villeune", "arrivalCity" : "villedeux", "nbrAdults" : 5, "nbrChildren" : 2, "depDate" : "2020-06-29", "minPrice" : 100, "maxPrice" : 500}';
 getAvailableFlights($json);
 
 ?>
