@@ -15,14 +15,10 @@ if(!empty($type)){
         getAvailableFlights($data);
     }
 
-<<<<<<< HEAD
-
     if($type == "price_range"){
 
     }
 }
 
 //SELECT MAX(fare),MIN(fare) FROM `fares` WHERE 1
-=======
 }
->>>>>>> 5c37212a6ef91f443e3d29501213a218236e5747

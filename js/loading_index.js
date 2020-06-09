@@ -2,11 +2,8 @@
 $(document).ready(function () {
 
     //ajaxRequest("GET", "php/request.php",recieve);
-<<<<<<< HEAD
     ajaxRequest("GET", "php/request.php",updatePrice);
 
-=======
->>>>>>> 5c37212a6ef91f443e3d29501213a218236e5747
 });
 
 
@@ -32,12 +29,9 @@ function displayList(response){
     for(let item of response){
         if(item === char) it++;
     }
-<<<<<<< HEAD
 }
 
 function updatePrice(message) {
 
-=======
     document.getElementById('nbFlights').innerText = ""+it;
->>>>>>> 5c37212a6ef91f443e3d29501213a218236e5747
 }
