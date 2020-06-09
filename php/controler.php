@@ -31,14 +31,15 @@ function getAvailableFlights($json){
     $date = new DateTime($date);
     $dateDeparture = $data['depDate'];
     $dateDeparture = new DateTime($dateDeparture);
-    $interval = $date->diff($dateDeparture);
+    $interval = $dateDeparture->diff($date);
     $interval =  $interval->days;
 
     //On cherche à quel jour de la semaine correspond la date demandée par le client
     $dateDeparture = $data['depDate'];
     list($yDep,$mDep,$dDep) = explode("-", $dateDeparture);
     $timeStamp = mktime(0,0,0,$mDep,$dDep,$yDep);
-    $day = date('w', $timeStamp);
+    $day = date('w', $timeStamp)-1;
+    echo $day;
 
 
     //Requêtes en fonctions des données insérées par l'utilisateur
@@ -47,11 +48,22 @@ function getAvailableFlights($json){
     $request->bindParam(':arrivalCity', $data['arrivalCity'], PDO::PARAM_STR);
     $request->bindParam(':dayOfWeek', $day, PDO::PARAM_INT);
     $request->execute();
+    echo " ".$interval;
 
     $newJson = array();
     while(($response = $request->fetch())!=0){
         $fareRequest = $bdd->prepare('SELECT fare FROM fares WHERE route=:route AND dateToDeparture=:dateDep AND weFlights=:weFlights AND fare > :minPrice AND fare < :maxPrice');
         $fareRequest->bindParam(':route', $response['route'], PDO::PARAM_STR);
+        if($interval == 0 ){
+            $interval = 0;
+        } else if($interval <= 3) {
+            $interval = 3;
+        } else if($interval <= 10) {
+            $interval = 10;
+        } else if($interval <= 21) {
+            $interval = 21;
+        }
+
         $fareRequest->bindParam(':dateDep', $interval, PDO::PARAM_INT);
         $fareRequest->bindParam(':minPrice', $data['minPrice'], PDO::PARAM_INT);
         $fareRequest->bindParam(':maxPrice', $data['maxPrice'], PDO::PARAM_INT);
@@ -90,7 +102,7 @@ function resolveDay($day){
     }
 }
 
-$json ='{"depCity" : "villeune", "arrivalCity" : "villedeux", "nbrAdults" : 5, "nbrChildren" : 2, "depDate" : "2020-06-29", "minPrice" : 100, "maxPrice" : 500}';
+$json ='{"depCity" : "Edmonton", "arrivalCity" : "Quebec", "nbrAdults" : 5, "nbrChildren" : 2, "depDate" : "2020-06-15", "minPrice" : 100, "maxPrice" : 2000}';
 getAvailableFlights($json);
 
 ?>
