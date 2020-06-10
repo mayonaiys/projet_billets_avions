@@ -72,11 +72,7 @@ function selectFlight(id){
     document.getElementById(id).style = "background-color: #39da58;";
     oldID = id;
     let tab = {id};
-    ajaxRequest("GET","php/request.php",  test,"type=saveFlightID&data="+JSON.stringify(tab));
-}
-
-function test(rep) {
-    console.log(rep);
+    ajaxRequest("GET","php/request.php",  null,"type=saveFlightID&data="+JSON.stringify(tab));
 }
 
 function displayList(response){
