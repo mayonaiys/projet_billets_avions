@@ -1,9 +1,9 @@
 <?php
 
 //Définition des constantes
-define('DB_USER', 'root');
-define('DB_PASSWORD', '');
-define('DB_PATH', 'mysql:dbname=projetcir2;host=localhost;');
+define('DB_USER', 'cairline');
+define('DB_PASSWORD', 'mdp');
+define('DB_PATH', 'mysql:dbname=cairline;host=localhost;');
 
 //Fonction de connexion à la base de données
 function connexbdd(){
@@ -278,8 +278,6 @@ function editClients($bdd,$json)
 
 function saveBooking($bdd)
 {
-
-
     $add = $bdd->prepare("INSERT INTO reservation (date, flight_id, profile_list) VALUES (:date,:flight_id,:profile_list)");
 
     $add->bindParam(':date', $_SESSION['flight_date'], PDO::PARAM_STR);
@@ -288,7 +286,6 @@ function saveBooking($bdd)
 
     $add->execute();
 
-    echo($bdd->lastInsertId());
 }
 
 ?>

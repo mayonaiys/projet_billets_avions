@@ -45,8 +45,8 @@ include 'php/controler.php';
         displayForms($db);
     ?>
 
-    <button type="button" class="btn btn-primary" onclick="confirm()">Confirmation</button>
-
+    <button type="button" class="btn btn-primary" id="confirm" onclick="confirm()">Confirmation</button>
+    <a class="btn btn-primary" href="index.html" id="returnIndex" role="button" style="display: none;">Retour à l'accueil</a>
 </div>
 
 <br>
