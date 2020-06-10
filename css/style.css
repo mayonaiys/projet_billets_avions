@@ -149,3 +149,9 @@
 .table-wrapper-scroll-y {
 	display: block;
 }
+
+
+#map {
+	height: 500px;
+	width: 100%;
+}
