@@ -16,20 +16,19 @@
     </head>
 <body style="background-image:url('data/background.jpg'); background-size: cover;">
 
-<!--HEADER-->
-
-<header class="header d-flex" style="margin-top: 20px; margin-left: 5%; margin-right: 5%; border-radius: 10px; background-color: rgba(200,200,200,0.6);">
-    <div class="container text-center my-auto" style="text-align: center;">
-        <h1 class="mb-1"><br>CANADA AIRLINE</h1>
-        <h3 class="mb-5">
-            <em>The best company in the world !</em>
-        </h3>
-    </div>
-
-</header>
 <br>
 
-<div class="container-fluid " style="width: 90%; margin: auto; border-radius: 10px; background-color: rgba(255, 255, 255,0.9); ">
+<div class="container-fluid">
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Canada Airline</a>
+        <span class="navbar-text">
+            La meilleure compagnie aérienne du monde !
+        </span>
+    </nav>
+
+    <br>
+
+
         <?php
             $nbPassenger=3;
 
