@@ -63,6 +63,11 @@ function research() {
 
 }
 
+function selectFlight(id){
+    console.log(id);
+    document.getElementById(id).style = "color: green;";
+}
+
 function displayList(response){
     console.log(response);
     document.getElementById('list').innerHTML = response;

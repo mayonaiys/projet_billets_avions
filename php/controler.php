@@ -1,9 +1,14 @@
 <?php
 
 //Définition des constantes
-define('DB_USER', 'cairline');
+/*define('DB_USER', 'cairline');
 define('DB_PASSWORD', 'mdp');
 define('DB_PATH', 'mysql:dbname=cairline;host=localhost;');
+*/
+
+define('DB_USER', 'root');
+define('DB_PASSWORD', '');
+define('DB_PATH', 'mysql:dbname=projetcir2;host=localhost;');
 
 //Fonction de connexion à la base de données
 function connexbdd(){
@@ -17,9 +22,11 @@ function connexbdd(){
 }
 
 function getAvailableFlights($bdd,$json){
-
     //Décodage du fichier json
     $data = json_decode($json,true);
+
+    //Sauvegarde du nombre de passagers via les sessions
+    $_SESSION['nbPassengers'] = $data['nbrAdults']+$data['nbrChildren'];
 
     //Récupération de la date du jour
     $date = getdate();
@@ -74,8 +81,8 @@ function getAvailableFlights($bdd,$json){
         if(($fareResponse = $fareRequest->fetch())!=0){
             $fareWithTaxes = $fareResponse['fare'] + $fareResponse['sDep'] + $fareResponse['sArrival'];
             $temp = '<p style="display: none;">$</p>
-                     <tr>
-                         <td style="text-align: center;">'.$response['ID'].'</td>
+                     <tr id="'.$response['ID'].'" onclick="selectFlight(\''.$response['ID'].'\')">
+                         <td style="text-align: center;">' .$response['ID'].'</td>
                          <td style="text-align: center;">'.$response['route'].'</td>
                          <td style="text-align: center;">'.$dateDeparture.'</td>
                          <td style="text-align: center;">'.$response['departureTime'].'</td>
