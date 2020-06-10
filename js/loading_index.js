@@ -88,6 +88,7 @@ function research() {
     tab["minPrice"] = parseInt(document.getElementById("min_value").innerText);
     tab["maxPrice"] = parseInt(document.getElementById("max_value").innerText);
 
+    document.getElementById("reserve").classList = "btn btn-primary disabled";
     ajaxRequest("GET", "php/request.php",displayList,"type=research&data="+JSON.stringify(tab));
 
 }
@@ -99,6 +100,7 @@ function selectFlight(id){
         document.getElementById(oldID).style = null;
     }
     document.getElementById(id).style = "background-color: #39da58;";
+    document.getElementById("reserve").classList = "btn btn-primary";
     oldID = id;
     let tab = {id};
     ajaxRequest("GET","php/request.php",  null,"type=saveFlightID&data="+JSON.stringify(tab));
