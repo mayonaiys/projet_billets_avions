@@ -79,7 +79,7 @@ function research() {
     }
 
     if(document.getElementById("nbPassengerChild").value !== "- de 4 ans"){
-        tab["nbrChildren"] = parseInt(document.getElementById("nbPassengerAdult").value);
+        tab["nbrChildren"] = parseInt(document.getElementById("nbPassengerChild").value);
         document.getElementById("nbPassengerChild").classList = "custom-select mr-sm-2";
     } else {
         document.getElementById("nbPassengerChild").classList = "custom-select mr-sm-2 is-invalid"
@@ -88,6 +88,7 @@ function research() {
     tab["minPrice"] = parseInt(document.getElementById("min_value").innerText);
     tab["maxPrice"] = parseInt(document.getElementById("max_value").innerText);
 
+    console.log(tab);
     document.getElementById("reserve").classList = "btn btn-primary disabled";
     ajaxRequest("GET", "php/request.php",displayList,"type=research&data="+JSON.stringify(tab));
 
