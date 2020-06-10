@@ -32,7 +32,12 @@ if(!empty($type)){
     }
 
     if($type == "reserve"){
-        header("Location: ../passengerform.php");
+        session_start();
+        if($_SESSION['nbPassengers']!=null){
+            header("Location: ../passengerform.php");
+        } else {
+            header("Location: ../index.html");
+        }
     }
 }
 

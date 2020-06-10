@@ -1,14 +1,9 @@
 <?php
 
 //Définition des constantes
-/*define('DB_USER', 'cairline');
+define('DB_USER', 'cairline');
 define('DB_PASSWORD', 'mdp');
 define('DB_PATH', 'mysql:dbname=cairline;host=localhost;');
-*/
-
-define('DB_USER', 'root');
-define('DB_PASSWORD', '');
-define('DB_PATH', 'mysql:dbname=projetcir2;host=localhost;');
 
 //Fonction de connexion à la base de données
 function connexbdd(){
@@ -224,6 +219,79 @@ function getPriceRange($db){
     $request->execute();
 
     return $request->fetch(PDO::FETCH_ASSOC);
+}
+
+//Fonction d'édition de la table client
+function editClients($json)
+{
+
+    //Décodage du fichier json
+    $data = json_decode($json,true);
+
+    //Connexion à la base de données
+    $bdd = connexbdd();
+
+    //Via la session on récupère ke nombre de passager
+    $nbPassenger=$_SESSION['nbPassengers'];
+
+    //Tableau pour récupérer les ids et les return à la fin de la fonction
+    $profile_list = "";
+
+    //Pour les N passagers on va tester si leurs infos sont déjà dans la BDD, si c'est pas le cas on les ajoute
+    for($i=1; $i<= $nbPassenger; $i++)
+    {
+        $nom=$data["passagers"]["$i"]["name"];
+        $prenom=$data["passagers"]["$i"]["firstname"];
+        $mail=$data["passagers"]["$i"]["mail"];
+        $date=$data["passagers"]["$i"]["birthDate"];
+
+        $request=$bdd->prepare("SELECT profile_id FROM profile WHERE prenom=:prenom AND nom=:nom AND mail=:mail AND birth=:AND");
+        $request->bindParam(':prenom', $prenom, PDO::PARAM_STR);
+        $request->bindParam(':nom', $nom, PDO::PARAM_STR);
+        $request->bindParam(':mail', $mail, PDO::PARAM_STR_CHAR);
+        $request->bindParam(':date', $date, PDO::PARAM_STR);
+        $request->execute();
+
+        $result=$request->fetch();
+
+        if(empty($result))
+        {
+            $add=$bdd->prepare("INSERT INTO profile (profile_id, prenom, nom, mail, birth) VALUES (NULL, '$prenom', '$nom', '$mail', '$date')");
+            $add->execute();
+
+            //On récupère le dernier id ajouté à la table profile et on l'enregistre dans le tableau d'id
+            $id = $bdd->lastInsertId();
+            $profile_list .= $id." ";
+        }
+        else
+        {
+            //Si la personne est déjà existante on push dans le tab d'id, l'id trouvé par la requête
+            $profile_list .= $result['profile_id']." ";
+        }
+    }
+
+    //
+    session_start();
+    $_SESSION['profile_list']=$profile_list;
+
+}
+
+function saveBooking($json)
+{
+
+    //Décodage du fichier json
+    $data = json_decode($json, true);
+
+    //Connexion à la base de données
+    $bdd = connexbdd();
+
+    session_start();
+    $flightID = $_SESSION['flightID'];
+    $dateofFlight = $data["reservation"]["DateofFlight"];
+    $profile_list = $_SESSION['profile_list'];
+
+    $add = $bdd->prepare("INSERT INTO reservation (reservation_id, Date, flight_id, profile_list) VALUES (NULL, '$dateofFlight', '$flightID', '$profile_list')");
+    $add->execute;
 }
 
 ?>
