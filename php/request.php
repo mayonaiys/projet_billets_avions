@@ -26,13 +26,9 @@ if(!empty($type)){
     if($type == "saveFlightID"){
         $data = filter_input(INPUT_GET, 'data');
         $data = json_decode($data,true);
-        session_start();
         $_SESSION['flightID']=$data['id'];
         echo($_SESSION['flightID']);
     }
 
-    if($type == "reserve"){
-        header("Location: ../passengerform.php");
-    }
 }
 

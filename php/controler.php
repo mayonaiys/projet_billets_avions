@@ -169,14 +169,10 @@ function convertDate($dayWeek,$dayDep,$monthDep,$yearDep){
 }
 
 //Fonction de récupération des informations de l'avion choisi
-function displayForms(){
-    session_start();
-    //Connexion à la base de données
-    $bdd = connexbdd();
-
+function displayForms($bdd){
     //Récupération des informations du vol
-    $request = $bdd->prepare('SELECT f.originAirport, f.destinationAirport, f.departureTime, f.arrivalTime, a1.city as depCity, a2.city as arrivalCity FROM flights f, airport a1, airport a2 WHERE f.ID=:flighID AND a1.airportCode=f.originAirport AND a2.airportCode=f.destinationAirport');
-    $request->bindParam(':flightID',$_SESSION['flightID'], PDO::PARAM_INT);
+    $request = $bdd->prepare('SELECT f.originAirport, f.destinationAirport, f.departureTime, f.arrivalTime, a1.city as depCity, a2.city as arrivalCity FROM flights f, airport a1, airport a2 WHERE f.ID=:flightID AND a1.airportCode=f.originAirport AND a2.airportCode=f.destinationAirport');
+    $request->bindParam(':flightID',$_SESSION['flightID'], PDO::PARAM_STR);
     $request->execute();
     $flight = $request->fetch();
 
@@ -184,7 +180,7 @@ function displayForms(){
     for($i = 1; $i < $_SESSION['nbPassengers']+1; $i++){
         $temp = '<div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Passager n°'.$i.' - VOL '.$_SESSION['flightID'].' : '.$flight['depCity'].' ['.$flight['originAirport'].'] ->  '.$flight['arrivalCity'].' ['.$flight['arrivalAirport'].'], départ à '.$flight['departureTime'].', arrivée à '.$flight['arrivalTime'].' le lundi 15 Juin 2020. </h5>
+                        <h5 class="card-title">Passager n°'.$i.' - VOL '.$_SESSION['flightID'].' : '.$flight['depCity'].' ['.$flight['originAirport'].'] ->  '.$flight['arrivalCity'].' ['.$flight['destinationAirport'].'], départ à '.$flight['departureTime'].', arrivée à '.$flight['arrivalTime'].' le lundi 15 Juin 2020. </h5>
                             <form class="form-inline">
                                 <label style="margin-right: 10px;">Prénom</label>
                                 <input type="text" class="form-control mb-2 mr-sm-2" id="name'.$i.'" placeholder="Entrez un prénom">

@@ -1,3 +1,9 @@
+<?php
+session_start();
+
+include 'php/controler.php';
+?>
+
 <!doctype html>
 <html lang='fr'>
      <head>
@@ -29,8 +35,9 @@
     <br>
 
     <?php
-        include 'php/controler.php';
-        displayForms();
+
+        $db = connexbdd();
+        displayForms($db);
     ?>
 
     <button type="button" class="btn btn-primary" onclick="confirm()">Confirmation</button>
