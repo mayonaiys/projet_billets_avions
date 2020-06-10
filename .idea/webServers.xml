@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="b6844f43-e78a-4980-adbb-85d3ee818a1c" name="local" url="http://localhost/PHP/projet_billets_avions/">
+        <fileTransfer port="0" accessType="LOCAL" />
+      </webServer>
+      <webServer id="79376e33-d029-4ef1-8728-2173aa69ac4b" name="distant" url="http://34.203.33.89">
+        <fileTransfer host="34.203.33.89" port="22" privateKey="C:\Users\Remi\Documents\ISEN-Project-CIR2-Group3" rootFolder="/var/www/html/canadaairline" accessType="SFTP" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
