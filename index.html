@@ -9,86 +9,124 @@
          <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
          <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-         <link rel="stylesheet" href="css/multirange.css">
+         <link rel="stylesheet" href="css/style.css">
          <script src="js/ajax.js"></script>
+         <script src="js/loading_index.js"></script>
          <script src="js/multirange.js"></script>
 
-
+         <script src="js/googleMap.js"></script>
+         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRRsa8PNbjYmn63HD1H7usOAmfBNh-DhA&callback=initMap" type="text/javascript"></script>
     </head>
 
-<body style="background-image:url('/data/backgroung.jpg'); background-size: cover;">
+<body style="background-image:url('data/background.jpg'); background-size: cover;">
 
-<!--HEADER-->
+<br>
 
-<header class="header d-flex" style="margin-top: 20px; margin-left: 5%; margin-right: 5%; border-radius: 10px; background-color: rgba(200,200,200,0.6);">
-    <div class="container text-center my-auto" style="text-align: center;">
-        <h1 class="mb-1"><br>CANADA AIRLINE</h1>
-        <h3 class="mb-5">
-            <em>The best company in the world !</em>
-        </h3>
-    </div>
+<div class="container-fluid">
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Canada Airline</a>
+        <span class="navbar-text">
+            La meilleure compagnie aérienne du monde !
+        </span>
+    </nav>
 
-</header>
+    <br>
 
-<div class="container-fluid " style="margin-top: 2%;" >
-    <div class="card"  style="width: 60%; margin: auto; border-radius: 10px; background-color: rgba(255, 255, 255,0.9); ">
-        <div class="card-body"  >
-                <div class="row" >
+    <div class="row">
+        <div class="col-4">
+            <div style="background-color: white; ">
+                <div class="card-body">
+                    <h5 class="card-title">Rechercher un vol :</h5>
+                    <label>Ville de départ :</label>
+                    <input list="departure_list" type="text" class="form-control mb-2 mr-sm-2" id="departure" placeholder="Ex: Edmonton">
+                    <datalist id="departure_list">
+                    </datalist>
 
+                    <label>Ville d'arrivée :</label>
+                    <input list="arrival_list" type="text" class="form-control mb-2 mr-sm-2" id="arrival" placeholder="Ex: Quebec">
+                    <datalist id="arrival_list">
+                    </datalist>
+                    <label>Date </label>
+                    <input type="date" class="form-control mb-2 mr-sm-2" id="date" value="" min="2020-01-01" max="">
 
-                    <div class="col-md-5" style="margin:20px; margin-left: 6%;">
-                        <div class="row">
-                            <label style="margin-right:5px;">Ville de départ </label>
-                            <input type="text" id="departure" >
+                    <label>Nombre de passagers :</label>
+                    <select class="custom-select mr-sm-2" id="nbPassengerAdult">
+                        <option selected>+ de 4 ans</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                    </select>
+
+                    <br>
+
+                    <select class="custom-select mr-sm-2" id="nbPassengerChild">
+                        <option selected>- de 4 ans</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                    </select>
+
+                    <br>
+
+                    <div style="width:100%;display: flex;justify-content: space-around">
+                        <label style="margin-right:10px;">Prix </label>
+                        <span id="min_value"></span>
+                        <div>
+                            <input type="range" multiple value="0,100" id="rangePrice" data-min="0" data-max="100"/>
                         </div>
-                        <br><br>
-                        <div class="row">
-                            <label style="margin-right:5px;">Ville d'Arrivée </label>
-                            <input type="text" id="arrival" >
-                        </div>
-                        <br><br>
-
-                        <div class="row" >
-                            <label style="margin-right:5px;">Passager total</label>
-                            <input type="number" max="9" id="nbPassengerTot" />
-                        </div>
+                        <span id="max_value" ></span>
                     </div>
 
-                       
+                    <br>
 
-                    <div class="col-md-5"  style="margin:20px;">
-                        <div class="row" style="float: right;">
-                            <label style="margin-right:5px;">Date </label>
-                            <input type="date" id="date" value="" min="2020-01-01" max="">
-
-                        </div>
-                        <br><br>
-
-                        <div class="row" style="float: right; margin-top: 12%; margin-bottom: 12%;">
-                            <label style="margin-right:5px;">Prix </label>
-                            <div style="float: right; margin-top: 5px;">
-                                <input type="range" multiple value="10,80" id="rangePrice"/>
-                            </div>
-                        </div>
-                        <br><br>
-
-                        <div class="row" style="float: right;">
-                            <label style="margin-right:5px;">Passager -4 ans</label>
-                            <input type="number" max="8" id="nbPassengerChild" />
-                        </div>
-
+                    <div class="row justify-content-center">
+                        <button type="button" class="btn btn-primary" id="search" onclick="research()">Valider</button>
                     </div>
                 </div>
-            
-                <br>
-                <div class="row">
+            </div>
+        </div>
 
-                    <button id="search" class="btn btn-primary"  style="margin-left: 45%; margin-bottom: 10px;">Rechercher</button>
-                </div>
-
+        <div class="col-8">
+            <h5>
+                <strong id="nbFlights">0</strong> résultat(s) trouvé(s)
+            </h5>
+            <div class="table-wrapper-scroll-y my-custom-scrollbar" style="background-color: rgba(255, 255, 255,0.9); ">
+                <table class="table table-bordered table-striped table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col" style="text-align: center;">N° vol</th>
+                            <th scope="col" style="text-align: center;">Trajet</th>
+                            <th scope="col" style="text-align: center;">Date</th>
+                            <th scope="col" style="text-align: center;">Heure de Départ</th>
+                            <th scope="col" style="text-align: center;">Heure d'Arrivée</th>
+                            <th scope="col" style="text-align: center;">Prix réduit (-4ans, TTC)</th>
+                            <th scope="col" style="text-align: center;">Prix normal (TTC)</th>
+                            <th scope="col" style="text-align: center;">Prix total (TTC)</th>
+                        </tr>
+                    </thead>
+                    <tbody  class="thead-light" style="border: 1px; border-color: darkgrey;" id="list">
+                    </tbody>
+                </table>
+            </div>
+            <br>
+            <button type="submit" id="reserve" class="btn btn-primary" style="margin-left:90%; margin-bottom: 20px;">Réserver</button>
         </div>
     </div>
 </div>
 
+<div id="map"></div>
 </body>
+
 </html>

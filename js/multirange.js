@@ -129,4 +129,34 @@ if (typeof module === "undefined") {
 	module.exports = multirange;
 }
 
+
+
 })();
+
+$(document).ready(function () {
+
+	let list = document.querySelectorAll('.multirange');
+
+	for(let i=0; i<list.length; i++){
+		list[i].addEventListener('input',function () {
+			let input = document.getElementById("rangePrice");
+
+			let percent_min =  input.valueLow;
+			let percent_max =  input.valueHigh;
+
+			let min_value = input.dataset["min"];
+			let max_value = input.dataset["max"];
+
+			let max = max_value * percent_max / 100;
+			let min = max_value * percent_min / 100;
+			if(min <= 0){
+				min = min_value;
+			}
+
+			document.getElementById("min_value").innerHTML = parseInt(min);
+			document.getElementById("max_value").innerHTML = parseInt(max);
+
+		});
+	}
+
+});
