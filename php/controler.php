@@ -1,9 +1,14 @@
 <?php
 
 //Définition des constantes
-define('DB_USER', 'cairline');
+/*define('DB_USER', 'cairline');
 define('DB_PASSWORD', 'mdp');
 define('DB_PATH', 'mysql:dbname=cairline;host=localhost;');
+*/
+
+define('DB_USER', 'root');
+define('DB_PASSWORD', '');
+define('DB_PATH', 'mysql:dbname=projetcir2;host=localhost;');
 
 //Fonction de connexion à la base de données
 function connexbdd(){
@@ -21,7 +26,6 @@ function getAvailableFlights($bdd,$json){
     $data = json_decode($json,true);
 
     //Sauvegarde du nombre de passagers via les sessions
-    session_start();
     $_SESSION['nbPassengers'] = $data['nbrAdults']+$data['nbrChildren'];
 
     //Récupération de la date du jour
