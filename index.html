@@ -13,6 +13,9 @@
          <script src="js/ajax.js"></script>
          <script src="js/loading_index.js"></script>
          <script src="js/multirange.js"></script>
+
+         <script src="js/googleMap.js"></script>
+         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRRsa8PNbjYmn63HD1H7usOAmfBNh-DhA&callback=initMap" type="text/javascript"></script>
     </head>
 
 <body style="background-image:url('data/background.jpg'); background-size: cover;">
@@ -118,10 +121,12 @@
                 </table>
             </div>
             <br>
-            <button type="submit" id="reserve" class="btn btn-primary" style="margin-left:90%; margin-bottom: 20px;">Réserver</button>
+            <button type="submit" id="reserve" class="btn btn-primary" style="margin-left:90%; margin-bottom: 20px;" onclick="testChange()">Réserver</button>
         </div>
     </div>
 </div>
+
+<div id="map"></div>
 </body>
 
 </html>
