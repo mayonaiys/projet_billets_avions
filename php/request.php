@@ -10,7 +10,7 @@ if(!empty($type)){
     $db = connexbdd();
     if($type=="research"){
         $data = filter_input(INPUT_GET, 'data');
-        getAvailableFlights($db,$data);
+        echo(getAvailableFlights($db,$data));
     }
 
     if($type == "price_range"){
@@ -23,6 +23,4 @@ if(!empty($type)){
         echo json_encode($list);
     }
 }
-
-//SELECT MAX(fare),MIN(fare) FROM `fares` WHERE 1
 

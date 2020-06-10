@@ -79,11 +79,11 @@
 
                     <div style="width:100%;display: flex;justify-content: space-around">
                         <label style="margin-right:10px;">Prix </label>
-                        <span id="min_value" >10</span>
+                        <span id="min_value"></span>
                         <div>
                             <input type="range" multiple value="0,100" id="rangePrice" data-min="0" data-max="100"/>
                         </div>
-                        <span id="max_value" >80</span>
+                        <span id="max_value" ></span>
                     </div>
 
                     <br>
@@ -103,14 +103,14 @@
                 <table class="table table-bordered table-striped table-hover">
                     <thead class="thead-dark">
                         <tr>
-                            <th scope="col" style="text-align: center;">Identifiant du vol</th>
+                            <th scope="col" style="text-align: center;">N° vol</th>
                             <th scope="col" style="text-align: center;">Trajet</th>
                             <th scope="col" style="text-align: center;">Date</th>
                             <th scope="col" style="text-align: center;">Heure de Départ</th>
                             <th scope="col" style="text-align: center;">Heure d'Arrivée</th>
-                            <th scope="col" style="text-align: center;">Prix réduit (-4ans)</th>
-                            <th scope="col" style="text-align: center;">Prix normal</th>
-                            <th scope="col" style="text-align: center;">Prix total</th>
+                            <th scope="col" style="text-align: center;">Prix réduit (-4ans, TTC)</th>
+                            <th scope="col" style="text-align: center;">Prix normal (TTC)</th>
+                            <th scope="col" style="text-align: center;">Prix total (TTC)</th>
                         </tr>
                     </thead>
                     <tbody  class="thead-light" style="border: 1px; border-color: darkgrey;" id="list">
