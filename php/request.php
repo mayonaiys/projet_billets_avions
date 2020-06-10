@@ -30,16 +30,5 @@ if(!empty($type)){
         echo($_SESSION['flightID']);
     }
 
-<<<<<<< HEAD
-=======
-    if($type == "reserve"){
-        session_start();
-        if($_SESSION['nbPassengers']!=null){
-            header("Location: ../passengerform.php");
-        } else {
-            header("Location: ../index.html");
-        }
-    }
->>>>>>> e4e7739b6c3d84010b398a89de0b297113aa9eae
 }
 
