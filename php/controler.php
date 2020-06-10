@@ -267,27 +267,19 @@ function editClients($json)
     }
 
     //
-    session_start();
     $_SESSION['profile_list']=$profile_list;
 
 }
 
-function saveBooking($json)
-{
-
-    //Décodage du fichier json
-    $data = json_decode($json, true);
-
+function saveBooking() {
     //Connexion à la base de données
     $bdd = connexbdd();
-
-    session_start();
     $flightID = $_SESSION['flightID'];
-    $dateofFlight = $data["reservation"]["DateofFlight"];
+    $dateDeparture = $_SESSION['dateDeparture'];
     $profile_list = $_SESSION['profile_list'];
 
-    $add = $bdd->prepare("INSERT INTO reservation (reservation_id, Date, flight_id, profile_list) VALUES (NULL, '$dateofFlight', '$flightID', '$profile_list')");
-    $add->execute;
+    $add = $bdd->prepare("INSERT INTO reservation (reservation_id, Date, flight_id, profile_list) VALUES (NULL, '$dateDeparture', '$flightID', '$profile_list')");
+    $add->execute();
 }
 
 ?>
