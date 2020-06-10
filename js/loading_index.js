@@ -46,8 +46,16 @@ $(document).ready(function () {
 function research() {
 
     let tab = {};
-    tab["depCity"] = document.getElementById("departure").value;
-    tab["arrivalCity"] = document.getElementById("arrival").value;
+    let departure = document.getElementById("departure").value;
+    departure = departure.split(' ');
+    tab["depCity"] = departure[0];
+    tab["depAirport"] = departure[1][1] + departure[1][2] + departure[1][3];
+
+    let arrival = document.getElementById("arrival").value;
+    arrival = arrival.split(' ');
+    tab["arrivalCity"] = arrival[0];
+    tab["arrivalAirport"] = arrival[1][1] + arrival[1][2] + arrival[1][3];
+
     tab["nbrAdults"] = parseInt(document.getElementById("nbPassengerAdult").value);
     tab["nbrChild"] = parseInt(document.getElementById("nbPassengerChild").value);
     tab["depDate"] = document.getElementById("date").value;

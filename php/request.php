@@ -20,7 +20,6 @@ if(!empty($type)){
     if($type == "completion"){
         $data = filter_input(INPUT_GET, 'data',FILTER_SANITIZE_STRING);
         $list = getCities($db,$data);
-
         echo json_encode($list);
     }
 }

@@ -1,9 +1,9 @@
 <?php
 
 //Définition des constantes
-define('DB_USER', 'root');
-define('DB_PASSWORD', '');
-define('DB_PATH', 'mysql:dbname=projetcir2;host=localhost;');
+define('DB_USER', 'cairline');
+define('DB_PASSWORD', 'mdp');
+define('DB_PATH', 'mysql:dbname=cairline;host=localhost;');
 
 
 //Connexion base de donnée
@@ -21,7 +21,6 @@ function getAvailableFlights($bdd,$json){
 
     //Décodage du fichier json
     $data = json_decode($json,true);
-
 
     //Récupération de la date du jour
     $date = getdate();
@@ -45,7 +44,6 @@ function getAvailableFlights($bdd,$json){
     $request->bindParam(':dayOfWeek', $day, PDO::PARAM_INT);
     $request->execute();
 
-    $newJson = array();
     $newResponse = "";
     while(($response = $request->fetch())!=0){
         $fareRequest = $bdd->prepare('SELECT fare FROM fares WHERE route=:route AND dateToDeparture=:dateDep AND weFlights=:weFlights AND fare > :minPrice AND fare < :maxPrice');
@@ -145,11 +143,6 @@ function getPriceRange($db){
     $request->execute();
 
     return $request->fetch(PDO::FETCH_ASSOC);
-
 }
-/*$json ='{"depCity" : "Edmonton", "arrivalCity" : "Quebec", "nbrAdults" : 5, "nbrChildren" : 2, "depDate" : "2020-06-15", "minPrice" : 100, "maxPrice" : 2000}';
-$json2 = '{"ID":"CA184"}';
-getAvailableFlights($json);
-getChosenFlight($json2);*/
 
 ?>
