@@ -30,5 +30,10 @@ if(!empty($type)){
         echo($_SESSION['flightID']);
     }
 
+    if($type == "reservation"){
+        $data = filter_input(INPUT_GET, 'data');
+        editClients($db,$data);
+    }
+
 }
 

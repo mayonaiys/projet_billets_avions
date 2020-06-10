@@ -1,9 +1,9 @@
 <?php
 
 //Définition des constantes
-define('DB_USER', 'cairline');
-define('DB_PASSWORD', 'mdp');
-define('DB_PATH', 'mysql:dbname=cairline;host=localhost;');
+define('DB_USER', 'root');
+define('DB_PASSWORD', '');
+define('DB_PATH', 'mysql:dbname=projetcir2;host=localhost;');
 
 //Fonction de connexion à la base de données
 function connexbdd(){
@@ -22,6 +22,10 @@ function getAvailableFlights($bdd,$json){
 
     //Sauvegarde du nombre de passagers via les sessions
     $_SESSION['nbPassengers'] = $data['nbrAdults']+$data['nbrChildren'];
+
+    //Sauvegarde de la date de départ via les sessions
+    $_SESSION['flight_date'] = $data['depDate'];
+
 
     //Récupération de la date du jour
     $date = getdate();
@@ -171,16 +175,19 @@ function displayForms($bdd){
     $request->execute();
     $flight = $request->fetch();
 
+    setlocale (LC_TIME, 'fr_FR');
+    $aff_date = strftime("%A %d %B %Y",strtotime($_SESSION['flight_date']));
+
     $newReponse = "";
     for($i = 1; $i < $_SESSION['nbPassengers']+1; $i++){
         $temp = '<div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Passager n°'.$i.' - VOL '.$_SESSION['flightID'].' : '.$flight['depCity'].' ['.$flight['originAirport'].'] ->  '.$flight['arrivalCity'].' ['.$flight['destinationAirport'].'], départ à '.$flight['departureTime'].', arrivée à '.$flight['arrivalTime'].' le lundi 15 Juin 2020. </h5>
+                        <h5 class="card-title">Passager n°'.$i.' - VOL '.$_SESSION['flightID'].' : '.$flight['depCity'].' ['.$flight['originAirport'].'] ->  '.$flight['arrivalCity'].' ['.$flight['destinationAirport'].'], départ à '.$flight['departureTime'].', arrivée à '.$flight['arrivalTime'].' le '.$aff_date.'. </h5>
                             <form class="form-inline">
                                 <label style="margin-right: 10px;">Prénom</label>
-                                <input type="text" class="form-control mb-2 mr-sm-2" id="name'.$i.'" placeholder="Entrez un prénom">
+                                <input type="text" class="form-control mb-2 mr-sm-2" id="firstname'.$i.'" placeholder="Entrez un prénom">
                                 <label style="margin-right: 10px;">Nom</label>
-                                <input type="text" class="form-control mb-2 mr-sm-2" id="firstname'.$i.'" placeholder="Entrez un nom">
+                                <input type="text" class="form-control mb-2 mr-sm-2" id="name'.$i.'" placeholder="Entrez un nom">
                                 <label style="margin-right: 10px;">Email</label>
                                 <input type="email" class="form-control mb-2 mr-sm-2" id="mail'.$i.'" placeholder="Entrez un email">
                                 <label style="margin-right: 10px;">Date de naissance</label>
@@ -218,33 +225,26 @@ function getPriceRange($db){
 }
 
 //Fonction d'édition de la table client
-function editClients($json)
+function editClients($bdd,$json)
 {
-
     //Décodage du fichier json
     $data = json_decode($json,true);
-
-    //Connexion à la base de données
-    $bdd = connexbdd();
-
-    //Via la session on récupère ke nombre de passager
-    $nbPassenger=$_SESSION['nbPassengers'];
 
     //Tableau pour récupérer les ids et les return à la fin de la fonction
     $profile_list = "";
 
     //Pour les N passagers on va tester si leurs infos sont déjà dans la BDD, si c'est pas le cas on les ajoute
-    for($i=1; $i<= $nbPassenger; $i++)
+    for($i=0; $i< sizeof($data); $i++)
     {
-        $nom=$data["passagers"]["$i"]["name"];
-        $prenom=$data["passagers"]["$i"]["firstname"];
-        $mail=$data["passagers"]["$i"]["mail"];
-        $date=$data["passagers"]["$i"]["birthDate"];
+        $nom=$data[$i]["name"];
+        $prenom=$data[$i]["firstname"];
+        $mail=$data[$i]["mail"];
+        $date=$data[$i]["date"];
 
-        $request=$bdd->prepare("SELECT profile_id FROM profile WHERE prenom=:prenom AND nom=:nom AND mail=:mail AND birth=:AND");
+        $request=$bdd->prepare("SELECT profile_id FROM profile WHERE prenom=:prenom AND nom=:nom AND mail=:mail AND birth=:date");
         $request->bindParam(':prenom', $prenom, PDO::PARAM_STR);
         $request->bindParam(':nom', $nom, PDO::PARAM_STR);
-        $request->bindParam(':mail', $mail, PDO::PARAM_STR_CHAR);
+        $request->bindParam(':mail', $mail, PDO::PARAM_STR);
         $request->bindParam(':date', $date, PDO::PARAM_STR);
         $request->execute();
 
@@ -252,34 +252,43 @@ function editClients($json)
 
         if(empty($result))
         {
-            $add=$bdd->prepare("INSERT INTO profile (profile_id, prenom, nom, mail, birth) VALUES (NULL, '$prenom', '$nom', '$mail', '$date')");
+            $add=$bdd->prepare("INSERT INTO profile (prenom, nom, mail, birth) VALUES (:prenom,:nom,:mail,:birth)");
+            $add->bindParam(':prenom', $prenom, PDO::PARAM_STR);
+            $add->bindParam(':nom', $nom, PDO::PARAM_STR);
+            $add->bindParam(':mail', $mail, PDO::PARAM_STR);
+            $add->bindParam(':birth', $date, PDO::PARAM_STR);
+
             $add->execute();
 
             //On récupère le dernier id ajouté à la table profile et on l'enregistre dans le tableau d'id
             $id = $bdd->lastInsertId();
-            $profile_list .= $id." ";
+            $profile_list .= "|".$id."|";
         }
         else
         {
             //Si la personne est déjà existante on push dans le tab d'id, l'id trouvé par la requête
-            $profile_list .= $result['profile_id']." ";
+            $profile_list .= "|".$result['profile_id']."|";
         }
     }
 
-    //
     $_SESSION['profile_list']=$profile_list;
 
+    saveBooking($bdd);
 }
 
-function saveBooking() {
-    //Connexion à la base de données
-    $bdd = connexbdd();
-    $flightID = $_SESSION['flightID'];
-    $dateDeparture = $_SESSION['dateDeparture'];
-    $profile_list = $_SESSION['profile_list'];
+function saveBooking($bdd)
+{
 
-    $add = $bdd->prepare("INSERT INTO reservation (reservation_id, Date, flight_id, profile_list) VALUES (NULL, '$dateDeparture', '$flightID', '$profile_list')");
+
+    $add = $bdd->prepare("INSERT INTO reservation (date, flight_id, profile_list) VALUES (:date,:flight_id,:profile_list)");
+
+    $add->bindParam(':date', $_SESSION['flight_date'], PDO::PARAM_STR);
+    $add->bindParam(':flight_id', $_SESSION['flightID'], PDO::PARAM_STR);
+    $add->bindParam(':profile_list', $_SESSION['profile_list'], PDO::PARAM_STR);
+
     $add->execute();
+
+    echo($bdd->lastInsertId());
 }
 
 ?>
