@@ -63,13 +63,23 @@ function research() {
 
 }
 
+let oldID ="";
+
 function selectFlight(id){
-    console.log(id);
-    document.getElementById(id).style = "color: green;";
+    if(oldID!==""){
+        document.getElementById(oldID).style = null;
+    }
+    document.getElementById(id).style = "background-color: #39da58;";
+    oldID = id;
+    let tab = {id};
+    ajaxRequest("GET","php/request.php",  test,"type=saveFlightID&data="+JSON.stringify(tab));
+}
+
+function test(rep) {
+    console.log(rep);
 }
 
 function displayList(response){
-    console.log(response);
     document.getElementById('list').innerHTML = response;
     let char = "$";
     let it = 0;

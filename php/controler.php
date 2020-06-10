@@ -77,7 +77,7 @@ function getAvailableFlights($bdd,$json){
         if(($fareResponse = $fareRequest->fetch())!=0){
             $fareWithTaxes = $fareResponse['fare'] + $fareResponse['sDep'] + $fareResponse['sArrival'];
             $temp = '<p style="display: none;">$</p>
-                     <tr id="'.$response['ID'].'" onclick="selectFlight('.$response['ID'].')">
+                     <tr id="'.$response['ID'].'" onclick="selectFlight(\''.$response['ID'].'\')">
                          <td style="text-align: center;">' .$response['ID'].'</td>
                          <td style="text-align: center;">'.$response['route'].'</td>
                          <td style="text-align: center;">'.$dateDeparture.'</td>
@@ -165,20 +165,39 @@ function convertDate($dayWeek,$dayDep,$monthDep,$yearDep){
 }
 
 //Fonction de récupération des informations de l'avion choisi
-function getChosenFlight($json){
-
-    //Décodage du fichier json
-    $data = json_decode($json,true);
-
+function displayForms(){
+    session_start();
     //Connexion à la base de données
-    $bdd = connexbdd(DB_PATH,DB_USER,DB_PASSWORD);
+    $bdd = connexbdd();
 
     //Récupération des informations du vol
-    $request = $bdd->prepare('SELECT * FROM flights WHERE ID=:id');
-    $request->bindParam(':id',$data['ID'], PDO::PARAM_INT);
+    $request = $bdd->prepare('SELECT f.originAirport, f.destinationAirport, f.departureTime, f.arrivalTime, a1.city as depCity, a2.city as arrivalCity FROM flights f, airport a1, airport a2 WHERE f.ID=:flighID AND a1.airportCode=f.originAirport AND a2.airportCode=f.destinationAirport');
+    $request->bindParam(':flightID',$_SESSION['flightID'], PDO::PARAM_INT);
     $request->execute();
     $flight = $request->fetch();
-    $newJson = array("ID"=>$flight['ID'],"originAirport"=>$flight['originAirport'],"destinationAirport"=>$flight['destinationAirport'],"originCity"=>$flight['originCity'],"destinationCity"=>$flight['destinationCity'],"date"=>"date","departureTime"=>$flight['departureTime'],"arrivalTime"=>$flight['arrivalTime']);
+
+    $newReponse = "";
+    for($i = 1; $i < $_SESSION['nbPassengers']+1; $i++){
+        $temp = '<div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Passager n°'.$i.' - VOL '.$_SESSION['flightID'].' : '.$flight['depCity'].' ['.$flight['originAirport'].'] ->  '.$flight['arrivalCity'].' ['.$flight['arrivalAirport'].'], départ à '.$flight['departureTime'].', arrivée à '.$flight['arrivalTime'].' le lundi 15 Juin 2020. </h5>
+                            <form class="form-inline">
+                                <label style="margin-right: 10px;">Prénom</label>
+                                <input type="text" class="form-control mb-2 mr-sm-2" id="name'.$i.'" placeholder="Entrez un prénom">
+                                <label style="margin-right: 10px;">Nom</label>
+                                <input type="text" class="form-control mb-2 mr-sm-2" id="firstname'.$i.'" placeholder="Entrez un nom">
+                                <label style="margin-right: 10px;">Email</label>
+                                <input type="email" class="form-control mb-2 mr-sm-2" id="mail'.$i.'" placeholder="Entrez un email">
+                                <label style="margin-right: 10px;">Date de naissance</label>
+                                <input type="date" class="form-control mb-2 mr-sm-2" id="date'.$i.'" value="" min="1920-01-01" max="">
+                            </form>
+                    </div>
+                </div>
+                <br>';
+        $newReponse .= $temp;
+    }
+
+    echo $newReponse;
 }
 
 //Fonction de récupération des villes pour la prédiction

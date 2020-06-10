@@ -28,42 +28,17 @@
 
     <br>
 
+    <?php
+        include 'php/controler.php';
+        displayForms();
+    ?>
 
-        <?php
-            $nbPassenger=3;
-
-            for($i=1; $i<=$nbPassenger;$i++)
-            {
-                echo "<br><div style='margin-left: 3%;'><h3>Informations Passager $i</h3><br>";
-                $nom='name'.$i;
-                $prenom='prenom'.$i;
-                $mail='mail'.$i;
-                $date='birth'.$i;
-
-                echo "
-                    <label>Nom </label>
-                    <input id='$nom' style='margin-right: 5%'>
-                    
-              
-
-                    <label>Prénom </label>
-                    <input id='$prenom' style='margin-right: 5%'> 
-                                       
-                    
-                
-                    <label>Mail </label>
-                    <input id='$mail' style='margin-right: 5%'>
-                                        
-                    
-
-                    <label>Date de naissance</label>
-                    <input type='date' id='$date' value='' >
-                
-                </div>
-                    <br><br>
-                ";
-            }
-            echo "<button type='submit' id='valid' class='btn btn-primary'  style='margin-left: 45%; margin-bottom: 10px;'>Valider</button> "
-        ?>
+    <button type="button" class="btn btn-primary" onclick="confirm()">Confirmation</button>
 
 </div>
+
+<br>
+
+</body>
+
+</html>
