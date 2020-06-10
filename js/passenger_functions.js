@@ -48,12 +48,25 @@ function confirm() {
         }
         document.getElementById("confirm").style="display:none;";
         document.getElementById("returnIndex").style=null;
-        ajaxRequest("GET", "php/request.php", insertionResult, "type=reservation&data=" + JSON.stringify(tab));
+        ajaxRequest("GET", "php/request.php", insertionFares, "type=reservation&data=" + JSON.stringify(tab));
     }
 }
 
 
-function insertionResult(data) {
+function insertionFares(json) {
+    let data = JSON.parse(json);
+    let totalPrice = 0;
+    for(let i = 1; i <= passengerNumber; i++){
+        document.getElementById('price'+i).style=null;
+        let fareWithTaxes = data[i-1][0]+data[i-1][1];
+        totalPrice += fareWithTaxes;
+        document.getElementById('price'+i).innerText="Prix : "+data[i-1][0]+"€ (HT) + "+data[i-1][1]+"€ (Charges) = "+fareWithTaxes+"€ (TTC)";
+    }
+    document.getElementById('totalprice').innerHTML='<div class="card">\n' +
+        '                    <div class="card-body">\n' +
+        '                        <h6>Prix total : '+totalPrice+'€ (TTC)</h6>\n' +
+        '                    </div>\n' +
+        '                </div><br>';
 }
 
 function createTab(){

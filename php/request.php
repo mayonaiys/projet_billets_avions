@@ -33,6 +33,7 @@ if(!empty($type)){
     if($type == "reservation"){
         $data = filter_input(INPUT_GET, 'data');
         editClients($db,$data);
+        echo(showPrice($db,$data));
     }
 
 }

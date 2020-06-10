@@ -78,6 +78,10 @@ function getAvailableFlights($bdd,$json){
         $fareRequest->execute();
 
         if(($fareResponse = $fareRequest->fetch())!=0){
+            //Sauvegarde du tarif et des charges via les sessions
+            $_SESSION['fare']=$fareResponse['fare'];
+            $_SESSION['charges']=$fareResponse['sDep'] + $fareResponse['sArrival'];
+
             $fareWithTaxes = $fareResponse['fare'] + $fareResponse['sDep'] + $fareResponse['sArrival'];
             $temp = '<p style="display: none;">$</p>
                      <tr id="'.$response['ID'].'" onclick="selectFlight(\''.$response['ID'].'\')">
@@ -94,77 +98,6 @@ function getAvailableFlights($bdd,$json){
         }
     }
     return $newResponse;
-}
-
-//Fonction de conversion de la date
-function convertDate($dayWeek,$dayDep,$monthDep,$yearDep){
-
-    $newDate = "";
-    switch ($dayWeek) {
-        case 0:
-            $newDate .= "Lundi ";
-            break;
-        case 1:
-            $newDate .= "Mardi ";
-            break;
-        case 2:
-            $newDate .= "Mercredi ";
-            break;
-        case 3:
-            $newDate .= "Jeudi ";
-            break;
-        case 4:
-            $newDate .= "Vendredi ";
-            break;
-        case 5:
-            $newDate .= "Samedi ";
-            break;
-        case 6:
-            $newDate .= "Dimanche ";
-            break;
-    }
-    $newDate .= $dayDep." ";
-
-    switch ((int)$monthDep) {
-        case 1:
-            $newDate .= "Janvier ";
-            break;
-        case 2:
-            $newDate .= "Février ";
-            break;
-        case 3:
-            $newDate .= "Mars ";
-            break;
-        case 4:
-            $newDate .= "Avril ";
-            break;
-        case 5:
-            $newDate .= "Mai ";
-            break;
-        case 6:
-            $newDate .= "Juin ";
-            break;
-        case 7:
-            $newDate .= "Juillet ";
-            break;
-        case 8:
-            $newDate .= "Aout ";
-            break;
-        case 9:
-            $newDate .= "Septembre ";
-            break;
-        case 10:
-            $newDate .= "Octobre ";
-            break;
-        case 11:
-            $newDate .= "Novembre ";
-            break;
-        case 12:
-            $newDate .= "Décembre ";
-            break;
-    }
-    $newDate .= $yearDep;
-    return $newDate;
 }
 
 //Fonction de récupération des informations de l'avion choisi
@@ -192,6 +125,7 @@ function displayForms($bdd){
                                 <input type="email" class="form-control mb-2 mr-sm-2" id="mail'.$i.'" placeholder="Entrez un email">
                                 <label style="margin-right: 10px;">Date de naissance</label>
                                 <input type="date" class="form-control mb-2 mr-sm-2" id="date'.$i.'" value="" min="1920-01-01" max="">
+                                <label id="price'.$i.'" style="display: none"></label>
                             </form>
                     </div>
                 </div>
@@ -225,8 +159,7 @@ function getPriceRange($db){
 }
 
 //Fonction d'édition de la table client
-function editClients($bdd,$json)
-{
+function editClients($bdd,$json){
     //Décodage du fichier json
     $data = json_decode($json,true);
 
@@ -234,8 +167,7 @@ function editClients($bdd,$json)
     $profile_list = "";
 
     //Pour les N passagers on va tester si leurs infos sont déjà dans la BDD, si c'est pas le cas on les ajoute
-    for($i=0; $i< sizeof($data); $i++)
-    {
+    for($i=0; $i< sizeof($data); $i++){
         $nom=$data[$i]["name"];
         $prenom=$data[$i]["firstname"];
         $mail=$data[$i]["mail"];
@@ -276,8 +208,7 @@ function editClients($bdd,$json)
     saveBooking($bdd);
 }
 
-function saveBooking($bdd)
-{
+function saveBooking($bdd){
     $add = $bdd->prepare("INSERT INTO reservation (date, flight_id, profile_list) VALUES (:date,:flight_id,:profile_list)");
 
     $add->bindParam(':date', $_SESSION['flight_date'], PDO::PARAM_STR);
@@ -286,6 +217,31 @@ function saveBooking($bdd)
 
     $add->execute();
 
+}
+
+function showPrice($bdd,$json){
+    //Décodage du fichier json
+    $data = json_decode($json,true);
+    $faresArray = array();
+    for($i=0; $i< sizeof($data); $i++){
+        $date = getdate();
+        $date = "".$date['year']."-".$date['mon']."-".$date['mday'];
+        $date = new DateTime($date);
+        $birthDate = $data[$i]['date'];
+        $birthDate = new DateTime($birthDate);
+        $interval = $birthDate->diff($date);
+        $interval =  $interval->days;
+        $temp = array();
+        $fare = $_SESSION['fare'];
+        $charges = $_SESSION['charges'];
+        if($interval<1460){
+            $fare = $fare/2;
+        }
+        array_push($temp,$fare,$charges);
+        array_push($faresArray,$temp);
+    }
+    $json = json_encode($faresArray);
+    return $json;
 }
 
 ?>

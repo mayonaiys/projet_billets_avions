@@ -40,13 +40,12 @@ include 'php/controler.php';
     <br>
 
     <?php
-
         $db = connexbdd();
         displayForms($db);
     ?>
-
+    <div id="totalprice"></div>
     <button type="button" class="btn btn-primary" id="confirm" onclick="confirm()">Confirmation</button>
-    <a class="btn btn-primary" href="index.html" id="returnIndex" role="button" style="display: none;">Retour à l'accueil</a>
+    <a class="btn btn-primary" href="index.html" id="returnIndex" role="button">Retour à l'accueil</a>
 </div>
 
 <br>
