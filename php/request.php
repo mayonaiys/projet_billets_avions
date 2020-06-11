@@ -74,7 +74,6 @@ if(!empty($type)){
     if($type == "saveDiscountFlight"){
         $data = filter_input(INPUT_GET, 'data');
         $_SESSION['nbPassengers']=1; //Sauvegarde le nombre de passagers dans la session
-        $_SESSION['discount']=$_SESSION['discount'.$data]; //Sauvegarde la réduction dans la session
         $_SESSION['flightID']=$_SESSION['flightID'.$data];
         $_SESSION['fare']=$_SESSION['fare'.$data];
         $_SESSION['charges']=$_SESSION['charges'.$data];

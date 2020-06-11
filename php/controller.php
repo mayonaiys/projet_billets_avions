@@ -256,11 +256,6 @@ function showPrice($json){
             $fare = $fare/2;
             $charges = $charges/2;
         }
-        if(isset($_SESSION['discount'])){ //Si il y a une réduction
-            $fare=$fare - (($_SESSION['discount']/100)*$fare);
-            $charges=$charges - (($_SESSION['discount']/100)*$charges);
-            $_SESSION['discount']=null;
-        }
         array_push($temp,$fare,$charges);
         array_push($faresArray,$temp);
     }
@@ -428,12 +423,11 @@ function getRandomFlights($bdd){
         }
 
         $_SESSION['flightID'.$i]=$flight['ID'];
-        $_SESSION['discount'.$i]=$discount;
         $_SESSION['flight_date'.$i]=$dateDep;
 
         $temp = '<div class="card-body">
                      <h5 class="card-title">Bon plan !</h5>
-                     <p class="card-text">'.(string)$discount.'% de réduction sur un vol '.$cities['dep']." [".$flight['originAirport']."] -> ".$cities['arrival']." [".$flight['destinationAirport'].'] le '.$dateDep.': <strong>'.$discountedFare.'€ (TCC)</strong> au lieu de <strong>'.$fare.'€ (TTC)</strong></p>
+                     <p class="card-text">'.(string)$discount.'% de réduction sur un vol '.$cities['dep']." [".$flight['originAirport']."] -> ".$cities['arrival']." [".$flight['destinationAirport'].'] le '.$dateDep.': <strong>'.$discountedFare.'€ (HT)</strong> au lieu de <strong>'.$fare.'€ (HT)</strong></p>
                      <a class="btn btn-success" type="button" href="php/request.php?type=saveDiscountFlight&data='.$i.'">J\'en profite!</a>
                  </div>';
         array_push($response,$temp);
