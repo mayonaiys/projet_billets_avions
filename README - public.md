@@ -21,6 +21,7 @@ le prix des billets est affiché pour chaque passager et le prix total est affic
 -Recherche avec un filtre supplémentaire de tranche de prix
 -Enregistrement des réservations et des informations des passagers dans la BDD
 -Possibilité d'appuyer sur un bouton pour télécharger et imprimer le billet en pdf
+-Visualisation du trajet sur une map Google sur la page avec le billet réservé
 
 
 ### Rejoindre le site
