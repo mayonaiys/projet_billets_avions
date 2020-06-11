@@ -22,5 +22,19 @@ if(!empty($type)){
         $list = getCities($db,$data);
         echo json_encode($list);
     }
+
+    if($type == "saveFlightID"){
+        $data = filter_input(INPUT_GET, 'data');
+        $data = json_decode($data,true);
+        $_SESSION['flightID']=$data['id'];
+        echo($_SESSION['flightID']);
+    }
+
+    if($type == "reservation"){
+        $data = filter_input(INPUT_GET, 'data');
+        editClients($db,$data);
+        echo(showPrice($db,$data));
+    }
+
 }
 

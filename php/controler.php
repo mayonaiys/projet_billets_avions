@@ -1,14 +1,9 @@
 <?php
 
 //Définition des constantes
-/*define('DB_USER', 'cairline');
+define('DB_USER', 'cairline');
 define('DB_PASSWORD', 'mdp');
 define('DB_PATH', 'mysql:dbname=cairline;host=localhost;');
-*/
-
-define('DB_USER', 'root');
-define('DB_PASSWORD', '');
-define('DB_PATH', 'mysql:dbname=projetcir2;host=localhost;');
 
 //Fonction de connexion à la base de données
 function connexbdd(){
@@ -28,6 +23,10 @@ function getAvailableFlights($bdd,$json){
     //Sauvegarde du nombre de passagers via les sessions
     $_SESSION['nbPassengers'] = $data['nbrAdults']+$data['nbrChildren'];
 
+    //Sauvegarde de la date de départ via les sessions
+    $_SESSION['flight_date'] = $data['depDate'];
+
+
     //Récupération de la date du jour
     $date = getdate();
     $date = "".$date['year']."-".$date['mon']."-".$date['mday'];
@@ -42,7 +41,6 @@ function getAvailableFlights($bdd,$json){
     list($yDep,$mDep,$dDep) = explode("-", $dateDeparture);
     $timeStamp = mktime(0,0,0,$mDep,$dDep,$yDep);
     $day = date('w', $timeStamp)-1;
-    $dateDeparture = convertDate($day,$dDep,$mDep,$yDep);
 
     //Requêtes en fonctions des données insérées par l'utilisateur
     $request = $bdd->prepare('SELECT ID, route, departureTime, arrivalTime FROM flights WHERE originAirport=:depAirport AND destinationAirport=:arrivalAirport AND dayOfWeek=:dayOfWeek');
@@ -79,7 +77,11 @@ function getAvailableFlights($bdd,$json){
         $fareRequest->execute();
 
         if(($fareResponse = $fareRequest->fetch())!=0){
-            $fareWithTaxes = $fareResponse['fare'] + $fareResponse['sDep'] + $fareResponse['sArrival'];
+            //Sauvegarde du tarif et des charges via les sessions
+            $_SESSION['fare']=$fareResponse['fare'];
+            $_SESSION['charges']=$fareResponse['sDep'] + $fareResponse['sArrival'];
+
+            $fareWithTaxes = $_SESSION['fare'] + $_SESSION['charges'];
             $temp = '<p style="display: none;">$</p>
                      <tr id="'.$response['ID'].'" onclick="selectFlight(\''.$response['ID'].'\')">
                          <td style="text-align: center;">' .$response['ID'].'</td>
@@ -97,92 +99,40 @@ function getAvailableFlights($bdd,$json){
     return $newResponse;
 }
 
-//Fonction de conversion de la date
-function convertDate($dayWeek,$dayDep,$monthDep,$yearDep){
-
-    $newDate = "";
-    switch ($dayWeek) {
-        case 0:
-            $newDate .= "Lundi ";
-            break;
-        case 1:
-            $newDate .= "Mardi ";
-            break;
-        case 2:
-            $newDate .= "Mercredi ";
-            break;
-        case 3:
-            $newDate .= "Jeudi ";
-            break;
-        case 4:
-            $newDate .= "Vendredi ";
-            break;
-        case 5:
-            $newDate .= "Samedi ";
-            break;
-        case 6:
-            $newDate .= "Dimanche ";
-            break;
-    }
-    $newDate .= $dayDep." ";
-
-    switch ((int)$monthDep) {
-        case 1:
-            $newDate .= "Janvier ";
-            break;
-        case 2:
-            $newDate .= "Février ";
-            break;
-        case 3:
-            $newDate .= "Mars ";
-            break;
-        case 4:
-            $newDate .= "Avril ";
-            break;
-        case 5:
-            $newDate .= "Mai ";
-            break;
-        case 6:
-            $newDate .= "Juin ";
-            break;
-        case 7:
-            $newDate .= "Juillet ";
-            break;
-        case 8:
-            $newDate .= "Aout ";
-            break;
-        case 9:
-            $newDate .= "Septembre ";
-            break;
-        case 10:
-            $newDate .= "Octobre ";
-            break;
-        case 11:
-            $newDate .= "Novembre ";
-            break;
-        case 12:
-            $newDate .= "Décembre ";
-            break;
-    }
-    $newDate .= $yearDep;
-    return $newDate;
-}
-
 //Fonction de récupération des informations de l'avion choisi
-function getChosenFlight($json){
-
-    //Décodage du fichier json
-    $data = json_decode($json,true);
-
-    //Connexion à la base de données
-    $bdd = connexbdd(DB_PATH,DB_USER,DB_PASSWORD);
-
+function displayForms($bdd){
     //Récupération des informations du vol
-    $request = $bdd->prepare('SELECT * FROM flights WHERE ID=:id');
-    $request->bindParam(':id',$data['ID'], PDO::PARAM_INT);
+    $request = $bdd->prepare('SELECT f.originAirport, f.destinationAirport, f.departureTime, f.arrivalTime, a1.city as depCity, a2.city as arrivalCity FROM flights f, airport a1, airport a2 WHERE f.ID=:flightID AND a1.airportCode=f.originAirport AND a2.airportCode=f.destinationAirport');
+    $request->bindParam(':flightID',$_SESSION['flightID'], PDO::PARAM_STR);
     $request->execute();
     $flight = $request->fetch();
-    $newJson = array("ID"=>$flight['ID'],"originAirport"=>$flight['originAirport'],"destinationAirport"=>$flight['destinationAirport'],"originCity"=>$flight['originCity'],"destinationCity"=>$flight['destinationCity'],"date"=>"date","departureTime"=>$flight['departureTime'],"arrivalTime"=>$flight['arrivalTime']);
+
+    setlocale (LC_TIME, 'fr_FR');
+    $aff_date = strftime("%A %d %B %Y",strtotime($_SESSION['flight_date']));
+
+    $newReponse = "";
+    for($i = 1; $i < $_SESSION['nbPassengers']+1; $i++){
+        $temp = '<div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Passager n°'.$i.' - VOL '.$_SESSION['flightID'].' : '.$flight['depCity'].' ['.$flight['originAirport'].'] ->  '.$flight['arrivalCity'].' ['.$flight['destinationAirport'].'], départ à '.$flight['departureTime'].', arrivée à '.$flight['arrivalTime'].' le '.$aff_date.'. </h5>
+                            <form class="form-inline">
+                                <label style="margin-right: 10px;">Prénom</label>
+                                <input type="text" class="form-control mb-2 mr-sm-2" id="firstname'.$i.'" placeholder="Entrez un prénom">
+                                <label style="margin-right: 10px;">Nom</label>
+                                <input type="text" class="form-control mb-2 mr-sm-2" id="name'.$i.'" placeholder="Entrez un nom">
+                                <label style="margin-right: 10px;">Email</label>
+                                <input type="email" class="form-control mb-2 mr-sm-2" id="mail'.$i.'" placeholder="Entrez un email">
+                                <label style="margin-right: 10px;">Date de naissance</label>
+                                <input type="date" class="form-control mb-2 mr-sm-2" id="date'.$i.'" value="" min="1920-01-01" max="">
+                                <label id="price'.$i.'" style="display: none"></label>
+                            </form>
+                    </div>
+                </div>
+                <br>';
+        $newReponse .= $temp;
+    }
+
+    echo $newReponse;
 }
 
 //Fonction de récupération des villes pour la prédiction
@@ -205,6 +155,109 @@ function getPriceRange($db){
     $request->execute();
 
     return $request->fetch(PDO::FETCH_ASSOC);
+}
+
+//Fonction d'édition de la table client
+function editClients($bdd,$json){
+    //Décodage du fichier json
+    $data = json_decode($json,true);
+
+    //Tableau pour récupérer les ids et les return à la fin de la fonction
+    $profile_list = "";
+
+    //Pour les N passagers on va tester si leurs infos sont déjà dans la BDD, si c'est pas le cas on les ajoute
+    for($i=0; $i< sizeof($data); $i++){
+        $nom=$data[$i]["name"];
+        $prenom=$data[$i]["firstname"];
+        $mail=$data[$i]["mail"];
+        $date=$data[$i]["date"];
+
+        $request=$bdd->prepare("SELECT profile_id FROM profile WHERE prenom=:prenom AND nom=:nom AND mail=:mail AND birth=:date");
+        $request->bindParam(':prenom', $prenom, PDO::PARAM_STR);
+        $request->bindParam(':nom', $nom, PDO::PARAM_STR);
+        $request->bindParam(':mail', $mail, PDO::PARAM_STR);
+        $request->bindParam(':date', $date, PDO::PARAM_STR);
+        $request->execute();
+
+        $result=$request->fetch();
+
+        if(empty($result))
+        {
+            $add=$bdd->prepare("INSERT INTO profile (prenom, nom, mail, birth) VALUES (:prenom,:nom,:mail,:birth)");
+            $add->bindParam(':prenom', $prenom, PDO::PARAM_STR);
+            $add->bindParam(':nom', $nom, PDO::PARAM_STR);
+            $add->bindParam(':mail', $mail, PDO::PARAM_STR);
+            $add->bindParam(':birth', $date, PDO::PARAM_STR);
+
+            $add->execute();
+
+            //On récupère le dernier id ajouté à la table profile et on l'enregistre dans le tableau d'id
+            $id = $bdd->lastInsertId();
+            $profile_list .= "|".$id."|";
+        }
+        else
+        {
+            //Si la personne est déjà existante on push dans le tab d'id, l'id trouvé par la requête
+            $profile_list .= "|".$result['profile_id']."|";
+        }
+    }
+
+    $_SESSION['profile_list']=$profile_list;
+
+    saveBooking($bdd);
+}
+
+function saveBooking($bdd){
+    $add = $bdd->prepare("INSERT INTO reservation (date, flight_id, profile_list) VALUES (:date,:flight_id,:profile_list)");
+
+    $add->bindParam(':date', $_SESSION['flight_date'], PDO::PARAM_STR);
+    $add->bindParam(':flight_id', $_SESSION['flightID'], PDO::PARAM_STR);
+    $add->bindParam(':profile_list', $_SESSION['profile_list'], PDO::PARAM_STR);
+
+    $add->execute();
+
+}
+
+function showPrice($bdd,$json){
+    //Décodage du fichier json
+    $data = json_decode($json,true);
+    $faresArray = array();
+    for($i=0; $i< sizeof($data); $i++){
+        $date = getdate();
+        $date = "".$date['year']."-".$date['mon']."-".$date['mday'];
+        $date = new DateTime($date);
+        $birthDate = $data[$i]['date'];
+        $birthDate = new DateTime($birthDate);
+        $interval = $birthDate->diff($date);
+        $interval =  $interval->days;
+        $temp = array();
+        $fare = $_SESSION['fare'];
+        $charges = $_SESSION['charges'];
+        if($interval<1460){
+            $fare = $fare/2;
+        }
+        array_push($temp,$fare,$charges);
+        array_push($faresArray,$temp);
+    }
+    $json = json_encode($faresArray);
+    return $json;
+}
+
+function login($bdd,$json){
+    //Décodage du fichier json
+    $data = json_decode($json,true);
+
+    $user = $bdd->prepare('SELECT * FROM profile WHERE mail=:mail');
+    $user->bindParam(':mail', $data['mail'], PDO::PARAM_STR);
+    $user->execute();
+    $infos = $user->fetch();
+    if($data['password']==$infos['password']){
+        $_SESSION['profile_id']=$infos['profile_id'];
+        $_SESSION['prenom']=$infos['prenom'];
+        return "connected";
+    } else {
+        return "error";
+    }
 }
 
 ?>

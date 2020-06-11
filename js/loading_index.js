@@ -45,31 +45,69 @@ $(document).ready(function () {
 function research() {
 
     let tab = {};
-    let departure = document.getElementById("departure").value;
-    departure = departure.split(' ');
-    tab["depAirport"] = departure[1][1] + departure[1][2] + departure[1][3];
 
-    let arrival = document.getElementById("arrival").value;
-    arrival = arrival.split(' ');
-    tab["arrivalAirport"] = arrival[1][1] + arrival[1][2] + arrival[1][3];
+    if(document.getElementById("departure").value !== ""){
+        let departure = document.getElementById("departure").value;
+        departure = departure.split(' ');
+        tab["depAirport"] = departure[1][1] + departure[1][2] + departure[1][3];
+        document.getElementById("departure").classList = "form-control mb-2 mr-sm-2";
+    } else {
+        document.getElementById("departure").classList = "form-control mb-2 mr-sm-2 is-invalid";
+    }
 
-    tab["nbrAdults"] = parseInt(document.getElementById("nbPassengerAdult").value);
-    tab["nbrChildren"] = parseInt(document.getElementById("nbPassengerChild").value);
-    tab["depDate"] = document.getElementById("date").value;
+    if(document.getElementById("arrival").value !== ""){
+        let arrival = document.getElementById("arrival").value;
+        arrival = arrival.split(' ');
+        tab["arrivalAirport"] = arrival[1][1] + arrival[1][2] + arrival[1][3];
+        document.getElementById("arrival").classList = "form-control mb-2 mr-sm-2";
+    } else {
+        document.getElementById("arrival").classList = "form-control mb-2 mr-sm-2 is-invalid";
+    }
+
+    if(document.getElementById("date").value !== ""){
+        tab["depDate"] = document.getElementById("date").value;
+        document.getElementById("date").classList = "form-control mb-2 mr-sm-2";
+    } else {
+        document.getElementById("date").classList = "form-control mb-2 mr-sm-2 is-invalid";
+    }
+
+    if(document.getElementById("nbPassengerAdult").value !== "+ de 4 ans"){
+        tab["nbrAdults"] = parseInt(document.getElementById("nbPassengerAdult").value);
+        document.getElementById("nbPassengerAdult").classList = "custom-select mr-sm-2";
+    } else {
+        document.getElementById("nbPassengerAdult").classList = "custom-select mr-sm-2 is-invalid"
+    }
+
+    if(document.getElementById("nbPassengerChild").value !== "- de 4 ans"){
+        tab["nbrChildren"] = parseInt(document.getElementById("nbPassengerChild").value);
+        document.getElementById("nbPassengerChild").classList = "custom-select mr-sm-2";
+    } else {
+        document.getElementById("nbPassengerChild").classList = "custom-select mr-sm-2 is-invalid"
+    }
+
     tab["minPrice"] = parseInt(document.getElementById("min_value").innerText);
     tab["maxPrice"] = parseInt(document.getElementById("max_value").innerText);
 
+    console.log(tab);
+    document.getElementById("reserve").classList = "btn btn-primary disabled";
     ajaxRequest("GET", "php/request.php",displayList,"type=research&data="+JSON.stringify(tab));
 
 }
 
+let oldID ="";
+
 function selectFlight(id){
-    console.log(id);
-    document.getElementById(id).style = "color: green;";
+    if(oldID!==""){
+        document.getElementById(oldID).style = null;
+    }
+    document.getElementById(id).style = "background-color: #39da58;";
+    document.getElementById("reserve").classList = "btn btn-primary";
+    oldID = id;
+    let tab = {id};
+    ajaxRequest("GET","php/request.php",  null,"type=saveFlightID&data="+JSON.stringify(tab));
 }
 
 function displayList(response){
-    console.log(response);
     document.getElementById('list').innerHTML = response;
     let char = "$";
     let it = 0;

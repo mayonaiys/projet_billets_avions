@@ -16,7 +16,9 @@ function ajaxRequest(type, url, callback, data = null){
 
     xhr.onload = () => {
         httpErrors(xhr.status);
-        callback(xhr.responseText);
+        if(callback!=null){
+            callback(xhr.responseText);
+        }
     };
 
     if(type === "POST"){

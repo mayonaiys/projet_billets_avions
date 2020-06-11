@@ -115,7 +115,7 @@
                     <input list="arrival_list" type="text" class="form-control mb-2 mr-sm-2" id="arrival" placeholder="Ex: Quebec">
                     <datalist id="arrival_list">
                     </datalist>
-                    <label>Date </label>
+                    <label>Date :</label>
                     <input type="date" class="form-control mb-2 mr-sm-2" id="date" value="" min="2020-01-01" max="">
 
                     <label>Nombre de passagers :</label>
@@ -136,6 +136,7 @@
 
                     <select class="custom-select mr-sm-2" id="nbPassengerChild">
                         <option selected>- de 4 ans</option>
+                        <option value="0">0</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -190,12 +191,11 @@
                 </table>
             </div>
             <br>
-            <button type="submit" id="reserve" class="btn btn-primary" style="margin-left:90%; margin-bottom: 20px;">Réserver</button>
+            <a type="submit" id="reserve" class="btn btn-primary disabled" style="margin-left:90%; margin-bottom: 20px;" href="passengerform.php" role="button">Réserver</a>
         </div>
     </div>
 </div>
 
-<div id="map"></div>
 </body>
 
 </html>

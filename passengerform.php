@@ -1,3 +1,9 @@
+<?php
+session_start();
+
+include 'php/controler.php';
+?>
+
 <!doctype html>
 <html lang='fr'>
      <head>
@@ -11,8 +17,13 @@
 
          <link rel="stylesheet" href="css/style.css">
          <script src="js/multirange.js"></script>
+         <script src="js/ajax.js"></script>
 
+        <script>
+            var passengerNumber = <?php echo($_SESSION['nbPassengers']); ?>
+        </script>
 
+         <script src="js/passenger_functions.js"></script>
     </head>
 <body style="background-image:url('data/background.jpg'); background-size: cover;">
 
@@ -28,42 +39,17 @@
 
     <br>
 
-
-        <?php
-            $nbPassenger=3;
-
-            for($i=1; $i<=$nbPassenger;$i++)
-            {
-                echo "<br><div style='margin-left: 3%;'><h3>Informations Passager $i</h3><br>";
-                $nom='name'.$i;
-                $prenom='prenom'.$i;
-                $mail='mail'.$i;
-                $date='birth'.$i;
-
-                echo "
-                    <label>Nom </label>
-                    <input id='$nom' style='margin-right: 5%'>
-                    
-              
-
-                    <label>Prénom </label>
-                    <input id='$prenom' style='margin-right: 5%'> 
-                                       
-                    
-                
-                    <label>Mail </label>
-                    <input id='$mail' style='margin-right: 5%'>
-                                        
-                    
-
-                    <label>Date de naissance</label>
-                    <input type='date' id='$date' value='' >
-                
-                </div>
-                    <br><br>
-                ";
-            }
-            echo "<button type='submit' id='valid' class='btn btn-primary'  style='margin-left: 45%; margin-bottom: 10px;'>Valider</button> "
-        ?>
-
+    <?php
+        $db = connexbdd();
+        displayForms($db);
+    ?>
+    <div id="totalprice"></div>
+    <button type="button" class="btn btn-primary" id="confirm" onclick="confirm()">Confirmation</button>
+    <a class="btn btn-primary" href="index.html" id="returnIndex" role="button">Retour à l'accueil</a>
 </div>
+
+<br>
+
+</body>
+
+</html>
