@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-include 'controler.php';
+include 'controller.php';
 
 $type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING);
 

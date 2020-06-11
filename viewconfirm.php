@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-include 'php/controler.php';
+include 'php/controller.php';
 ?>
 
 <!doctype html>
