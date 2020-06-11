@@ -7,12 +7,6 @@
 -- Version du serveur :  5.7.21
 -- Version de PHP :  7.2.4
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
-SET time_zone = "+00:00";
-
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -15743,13 +15737,13 @@ CREATE TABLE IF NOT EXISTS `profile` (
 -- Structure de la table `reservation`
 --
 
-DROP TABLE IF EXISTS `reservation`;
-CREATE TABLE IF NOT EXISTS `reservation` (
-  `reservation_id` int(11) NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS `booking`;
+CREATE TABLE IF NOT EXISTS `booking` (
+  `booking_id` int(11) NOT NULL AUTO_INCREMENT,
   `date` varchar(15) NOT NULL,
   `flight_id` varchar(6) NOT NULL,
   `profile_list` varchar(40) NOT NULL,
-  PRIMARY KEY (`reservation_id`)
+  PRIMARY KEY (`booking_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 COMMIT;
 
