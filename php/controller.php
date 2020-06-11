@@ -373,10 +373,15 @@ function getRandomFlights($bdd){
         $cities->execute();
         $cities = $cities->fetch();
 
+        $fare = $bdd->prepare('SELECT fare FROM fares WHERE route=:route AND dateToDeparture=:dateDep ');
+        $fare->bindParam(':route',$flight['route'],PDO::PARAM_STR);
+        $fare->execute();
+        $fare = $fare->fetch()['fare'];
+
         $temp = '<div class="card-body">
                      <h5 class="card-title">Bon plan !</h5>
                      <p class="card-text">'.(string)$discount.'% de réduction sur un aller : '.$cities['dep']." [".$flight['originAirport']."] -> ".$cities['arrival']." [".$flight['destinationAirport'].'] le '.$dateDep.'</p>
-                     <p class="card-text" style="text-align: right;">Prix : (TTC)</p>
+                     <p class="card-text" style="text-align: right;">Prix : '.$fare.' (HT)</p>
                  </div>';
         array_push($response,$temp);
     }
