@@ -1,8 +1,9 @@
 //Script de la page de confirmation de réservation
-function confirm() {
+function confirm() { //Fonction de confirmation du vol sélectionné
     let tab = createTab();
     let valid = true;
-    for(let i=1; i<=passengerNumber; i++){
+    for(let i=1; i<=passengerNumber; i++){ //Pour chaque formulaire correspondant à un passager on va vérifier si les informations
+        //sont bien entrées, si oui, on enregistre ces informations dans un tableau
         let user = {};
         if(document.getElementById("firstname"+i).value !== ""){
             user["firstname"] = document.getElementById("firstname"+i).value;
@@ -39,21 +40,20 @@ function confirm() {
         tab[i-1]=user;
     }
 
-    if(valid) {
-        for(let i=1; i<=passengerNumber; i++){
+    if(valid) { //Si toute les informations ont bien été entrées
+        for(let i=1; i<=passengerNumber; i++){ //Pour chaque formulaire on désactive les champs
             document.getElementById("firstname"+i).disabled = true;
             document.getElementById("name"+i).disabled = true;
             document.getElementById("mail"+i).disabled = true;
             document.getElementById("date"+i).disabled = true;
         }
-        document.getElementById("confirm").style="display:none;";
-        document.getElementById("returnIndex").style=null;
-        ajaxRequest("GET", "php/request.php", insertionFares, "type=booking&data=" + JSON.stringify(tab));
+        document.getElementById("confirm").style="display:none;"; //On cache le bouton de confirmation
+        ajaxRequest("GET", "php/request.php", insertionFares, "type=booking&data=" + JSON.stringify(tab)); //Requête ajax pour demander au serveur les tarifs pour chaque passager
     }
 }
 
 
-function insertionFares(json) {
+function insertionFares(json) { //Fonction d'insertion des tarifs pour chaque passager
     console.log(json);
     let data = JSON.parse(json);
     let totalPrice = 0;
@@ -72,7 +72,7 @@ function insertionFares(json) {
         '                </div><br>';
 }
 
-function createTab(){
+function createTab(){ //Fonction de création d'un tableau vide
     let tab = [];
     for(let i = 0; i < passengerNumber; i++){
         tab.push({});
@@ -81,7 +81,7 @@ function createTab(){
 }
 
 
-function getBillet(id) {
+function getBillet(id) { //Fonction de récupération du billet
     id = parseInt(id) - 1;
 
     window.open("billet.php?id="+id);

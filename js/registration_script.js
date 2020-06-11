@@ -1,4 +1,5 @@
-function register(){
+//Script de la page d'enregistrement
+function register(){ //Pour chaque champs on va vérifier si les informations sont bient rentrées, si oui on les enregistre dans un tableau
     let tab = {};
     if(document.getElementById("firstname").value !== ""){
         tab["firstname"] = document.getElementById("firstname").value;
@@ -36,19 +37,18 @@ function register(){
     }
 
     if(document.getElementById("passwordrepeat").value !== ""){
-        if(document.getElementById("passwordrepeat").value===(document.getElementById("password").value)){
+        if(document.getElementById("passwordrepeat").value===(document.getElementById("password").value)){ //On vérifie que les mots de passes correspondent
             document.getElementById("passwordrepeat").classList = "form-control";
-            ajaxRequest("GET", "php/request.php",function (response) {
-                console.log(response);
-                if(response==="alreadyexist"){
-                    document.getElementById("error").innerHTML='<section class="container alert alert-danger">L\'utilisateur est déjà enregistré.</section>';
-                } else if(response==="registered"){
-                    document.location.href="index.html";
+            ajaxRequest("GET", "php/request.php",function (response) { //Requête ajax pour demander au serveur d'enregistrer l'utilisateur ou, s'il existe déjà, le faire savoir
+                if(response==="alreadyexist"){ //Si l'utilisateur existe déjà
+                    document.getElementById("error").innerHTML='<section class="container alert alert-danger">L\'utilisateur est déjà enregistré.</section>'; //On l'indique
+                } else if(response==="registered"){ //Sinon il est enregistré
+                    document.location.href="index.html"; //On revient sur la page d'accueil
                 }
 
             },"type=register&data="+JSON.stringify(tab));
-        } else {
-            document.getElementById("error").innerHTML='<section class="container alert alert-danger">Les mots de passe ne correspondent pas.</section>';
+        } else { //Si les mots de passe ne correspondent pas
+            document.getElementById("error").innerHTML='<section class="container alert alert-danger">Les mots de passe ne correspondent pas.</section>'; //On l'indique
         }
     } else {
         document.getElementById("passwordrepeat").classList = "form-control is-invalid";

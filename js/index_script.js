@@ -195,8 +195,8 @@ function signin(){
 function selectDiscountFlight(id,discount){
     let tabID = {id};
     let tabDiscount = {discount};
-    ajaxRequest("GET","php/request.php",null,"type=saveDiscount&data="+JSON.stringify(tabDiscount));
-    ajaxRequest("GET","php/request.php",function (response) {
+    ajaxRequest("GET","php/request.php",null,"type=saveDiscount&data="+JSON.stringify(tabDiscount)); //Requête ajax pour enregister la réduction
+    ajaxRequest("GET","php/request.php",function (response) { //Requête ajax pour enregistrer l'id du vol
         console.log(response);
     },"type=saveFlightID&data="+JSON.stringify(tabID));
     document.location.href="viewconfirm.php";
