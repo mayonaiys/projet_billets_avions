@@ -47,3 +47,4 @@ function dbRequestPhotos($db)
 $db=dbConnect();
 
 echo dbRequestPhotos($db);
+
