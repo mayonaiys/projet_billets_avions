@@ -64,8 +64,7 @@ function insertionFares(json) {
         document.getElementById('price'+i).innerText="Prix : "+data[i-1][0]+"€ (HT) + "+data[i-1][1]+"€ (Charges) = "+fareWithTaxes+"€ (TTC)";
 
         $("#billet"+i).empty();
-        $("#billet"+i).append('<button class="btn btn-primary" onclick="getBillet('+i+')" >Récupérer le billet</button>');
-    }
+        $("#billet"+i).append('<button class="btn btn-primary" onclick="getBillet('+i+')" >Récupérer le billet</button>');    }
     document.getElementById('totalprice').innerHTML='<div class="card">\n' +
         '                    <div class="card-body">\n' +
         '                        <h6>Prix total : '+totalPrice+'€ (TTC)</h6>\n' +
