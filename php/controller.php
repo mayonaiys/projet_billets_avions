@@ -16,6 +16,7 @@ function connexbdd(){
     }
 }
 
+//Fonction de récupération des vols disponibles
 function getAvailableFlights($bdd,$json){
     //Décodage du fichier json
     $data = json_decode($json,true);
@@ -53,6 +54,8 @@ function getAvailableFlights($bdd,$json){
     while(($response = $request->fetch())!=0){
         $fareRequest = $bdd->prepare('SELECT fare FROM fares WHERE route=:route AND dateToDeparture=:dateDep AND weFlights=:weFlights AND fare > :minPrice AND fare < :maxPrice');
         $fareRequest->bindParam(':route', $response['route'], PDO::PARAM_STR);
+
+        //On fixe l'intervalle pour pouvoir connaitre le prix du billet
         if($interval == 0 ){
             $interval = 0;
         } else if($interval <= 3) {
@@ -62,10 +65,11 @@ function getAvailableFlights($bdd,$json){
         } else if($interval <= 21) {
             $interval = 21;
         }
+
         $fareRequest->bindParam(':dateDep', $interval, PDO::PARAM_INT);
-        if($day >= 1 && $day <= 5){
+        if($day >= 1 && $day <= 5){ //Si le vol part pendant la semaine
             $weFlights = 0;
-        } else if($day == 0 || $day == 6){
+        } else if($day == 0 || $day == 6){ //Si le vol part pendant un week-end
             $weFlights = 1;
         }
         $fareRequest->bindParam(':weFlights',$weFlights, PDO::PARAM_INT);
@@ -94,6 +98,7 @@ function getAvailableFlights($bdd,$json){
             }
 
             $fareWithTaxes = $_SESSION['fare'] + $_SESSION['charges'];
+            //On va renvoyer le code html permettant l'affichage du vol
             $temp = '<p style="display: none;">$</p>
                      <tr id="'.$response['ID'].'" onclick="selectFlight(\''.$response['ID'].'\')">
                          <td style="text-align: center;">' .$response['ID'].'</td>
@@ -119,6 +124,7 @@ function displayForms($bdd){
     $request->execute();
     $flight = $request->fetch();
 
+    //On récupère la date
     setlocale (LC_TIME, 'fr_FR');
     $aff_date = strftime("%A %d %B %Y",strtotime($_SESSION['flight_date']));
 
@@ -218,6 +224,7 @@ function editClients($bdd,$json){
     saveBooking($bdd);
 }
 
+//Fonction d'édition de la table des réservations
 function saveBooking($bdd){
     $add = $bdd->prepare("INSERT INTO booking (date, flight_id, profile_list) VALUES (:date,:flight_id,:profile_list)");
 
@@ -226,15 +233,15 @@ function saveBooking($bdd){
     $add->bindParam(':profile_list', $_SESSION['profile_list'], PDO::PARAM_STR);
 
     $add->execute();
-
-    $_SESSION['booking_id'] = $bdd->lastInsertId();
 }
 
+//Fonction de récupération
 function showPrice($json){
     //Décodage du fichier json
     $data = json_decode($json,true);
     $faresArray = array();
     for($i=0; $i< sizeof($data); $i++){
+        //On trouve l'intervale de temps entre la date actuelle et celle du vol pour déterminer le prix du billet
         $date = getdate();
         $date = "".$date['year']."-".$date['mon']."-".$date['mday'];
         $date = new DateTime($date);
@@ -249,7 +256,7 @@ function showPrice($json){
             $fare = $fare/2;
             $charges = $charges/2;
         }
-        if(isset($_SESSION['discount'])){
+        if(isset($_SESSION['discount'])){ //Si il y a une réduction
             $fare=$fare - (($_SESSION['discount']/100)*$fare);
             $charges=$charges - (($_SESSION['discount']/100)*$charges);
             $_SESSION['discount']=null;
@@ -261,6 +268,7 @@ function showPrice($json){
     return $json;
 }
 
+//Fonction de connexion au site
 function login($bdd,$json){
     //Décodage du fichier json
     $data = json_decode($json,true);
@@ -269,15 +277,16 @@ function login($bdd,$json){
     $user->bindParam(':mail', $data['mail'], PDO::PARAM_STR);
     $user->execute();
     $infos = $user->fetch();
-    if(password_verify($data['password'],$infos['password'])){
-        $_SESSION['profile_id']=$infos['profile_id'];
-        $_SESSION['firstname']=$infos['firstname'];
-        return "connected";
-    } else {
-        return "error";
+    if(password_verify($data['password'],$infos['password'])){ //Vérification de la correspondance des mots de passe
+        $_SESSION['profile_id']=$infos['profile_id']; //On enregistre l'id de l'utilisateur dans la session
+        $_SESSION['firstname']=$infos['firstname']; //On enregistre le prénom de l'utilisateur dans la session
+        return "connected"; //On renvoie qu'il est connecté
+    } else { //Sinon
+        return "error"; //On renvoie une erreur
     }
 }
 
+//Fonction d'enregistrement d'un utilisateur
 function register($bdd,$json){
     //Décodage du fichier json
     $data = json_decode($json,true);
@@ -289,8 +298,8 @@ function register($bdd,$json){
     $addUser->bindParam(':name',$data['name'], PDO::PARAM_STR);
     $addUser->execute();
 
-    if(($user = $addUser->fetch())!=0){
-        if($user['password']==null){
+    if(($user = $addUser->fetch())!=0){ //Si le client existe déjà
+        if($user['password']==null){ //Mais qu'il n'a pas de mot de passe enregistré, on lui attribue un mot de passe
             $addPassword = $bdd->prepare('UPDATE profile SET password=:password WHERE mail=:mail AND firstname=:firstname AND name=:name');
             $addPassword->bindParam(':password',$password, PDO::PARAM_STR);
             $addPassword->bindParam(':mail',$data['mail'], PDO::PARAM_STR);
@@ -300,10 +309,10 @@ function register($bdd,$json){
             $_SESSION['profile_id']=$user['profile_id'];
             $_SESSION['firstname']=$user['firstname'];
             $response = "registered";
-        } else {
+        } else { //Sinon on indique qu'il est déjà enregistré
             $response = "alreadyexist";
         }
-    } else {
+    } else { //Sinon on crée son compte utilisateur
         $add=$bdd->prepare("INSERT INTO profile (firstname, name, mail, birth, password) VALUES (:firstname,:name,:mail,:birth,:password)");
         $add->bindParam(':firstname',  $data['firstname'], PDO::PARAM_STR);
         $add->bindParam(':name', $data['name'], PDO::PARAM_STR);
@@ -319,15 +328,16 @@ function register($bdd,$json){
     return $response;
 }
 
+//Fonction de récupération des réservations
 function getBooking($bdd){
     $booking=$bdd->prepare("SELECT * FROM booking");
     $booking->execute();
 
     $response = "";
     while(($temp = $booking->fetch())!=0){
-        $ids=explode(" ",$temp['profile_list']);
+        $ids=explode(" ",$temp['profile_list']);//On récupère les ids de la réservation
         for($i = 0; $i < count($ids); $i++){
-            if($_SESSION['profile_id']==(int)$ids[$i]){
+            if($_SESSION['profile_id']==(int)$ids[$i]){ //On cherche si l'id de l'utilisateur est présent dans cette liste
                 $flight = $bdd->prepare('SELECT route,departureTime,arrivalTime FROM flights WHERE ID=:flightID');
                 $flight->bindParam(':flightID',$temp['flight_id'], PDO::PARAM_STR);
                 $flight->execute();
@@ -347,25 +357,23 @@ function getBooking($bdd){
     return $response;
 }
 
+//Fonction de récupération des infos sur l'utilisateur
 function getClientInfo($db,$id){
     $request= $db->prepare("SELECT * FROM profile WHERE profile_id=:profile_id");
     $request->bindParam(':profile_id', $id, PDO::PARAM_INT);
-
     $request->execute();
-
     return $request->fetch();
 }
 
+//Fonction de récupération des infos sur un vol
 function getFlightInfo($db,$id){
-
     $request= $db->prepare("SELECT flights.*,air1.*,air2.airportCode as airportCode2,air2.city as city2,air2.latitude as latitude2,air2.longitude as longitude2 FROM flights INNER JOIN airport air1 ON flights.originAirport = air1.airportCode INNER JOIN airport air2 ON flights.destinationAirport=air2.airportCode WHERE flights.ID=:ID");
     $request->bindParam(':ID', $id, PDO::PARAM_INT);
-
     $request->execute();
-
     return $request->fetch();
 }
 
+//Fonction de récupération de 3 vols tirés aléatoirement
 function getRandomFlights($bdd){
     $randomFlights = $bdd->prepare('SELECT * FROM flights ORDER BY RAND() LIMIT 3');
     $randomFlights->execute();
@@ -420,7 +428,7 @@ function getRandomFlights($bdd){
 
         $temp = '<div class="card-body">
                      <h5 class="card-title">Bon plan !</h5>
-                     <p class="card-text">'.(string)$discount." ".$flight['ID'].'% de réduction sur un vol '.$cities['dep']." [".$flight['originAirport']."] -> ".$cities['arrival']." [".$flight['destinationAirport'].'] le '.$dateDep.': <strong>'.$discountedFare.'€ (TCC)</strong> au lieu de <strong>'.$fare.'€ (TTC)</strong></p>
+                     <p class="card-text">'.(string)$discount.'% de réduction sur un vol '.$cities['dep']." [".$flight['originAirport']."] -> ".$cities['arrival']." [".$flight['destinationAirport'].'] le '.$dateDep.': <strong>'.$discountedFare.'€ (TCC)</strong> au lieu de <strong>'.$fare.'€ (TTC)</strong></p>
                      <input class="btn btn-success" type="button" value="J\'en profite!" onclick="selectDiscountFlight(\''.$flight['ID'].'\','.$discount.')">
                  </div>';
         array_push($response,$temp);
@@ -429,6 +437,7 @@ function getRandomFlights($bdd){
     return $response;
 }
 
+//Fonction de récupération d'un interval avant le départ du vol aléatoire
 function getDateToDeparture(){
     $tab = [10,21];
     $rdm = random_int(0,1);
