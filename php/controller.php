@@ -218,7 +218,7 @@ function saveBooking($bdd){
     $_SESSION['booking_id'] = $bdd->lastInsertId();
 }
 
-function showPrice($bdd,$json){
+function showPrice($json){
     //Décodage du fichier json
     $data = json_decode($json,true);
     $faresArray = array();
@@ -235,6 +235,7 @@ function showPrice($bdd,$json){
         $charges = $_SESSION['charges'];
         if($interval<1460){
             $fare = $fare/2;
+            $charges = $charges/2;
         }
         array_push($temp,$fare,$charges);
         array_push($faresArray,$temp);
@@ -372,10 +373,15 @@ function getRandomFlights($bdd){
         $cities->execute();
         $cities = $cities->fetch();
 
+        $fare = $bdd->prepare('SELECT fare FROM fares WHERE route=:route AND dateToDeparture=:dateDep ');
+        $fare->bindParam(':route',$flight['route'],PDO::PARAM_STR);
+        $fare->execute();
+        $fare = $fare->fetch()['fare'];
+
         $temp = '<div class="card-body">
                      <h5 class="card-title">Bon plan !</h5>
                      <p class="card-text">'.(string)$discount.'% de réduction sur un aller : '.$cities['dep']." [".$flight['originAirport']."] -> ".$cities['arrival']." [".$flight['destinationAirport'].'] le '.$dateDep.'</p>
-                     <p class="card-text" style="text-align: right;">Prix : (TTC)</p>
+                     <p class="card-text" style="text-align: right;">Prix : '.$fare.' (HT)</p>
                  </div>';
         array_push($response,$temp);
     }
