@@ -30,11 +30,41 @@ if(!empty($type)){
         echo($_SESSION['flightID']);
     }
 
-    if($type == "reservation"){
+    if($type == "booking"){
         $data = filter_input(INPUT_GET, 'data');
         editClients($db,$data);
         echo(showPrice($db,$data));
     }
 
+    if($type == "login"){
+        $data = filter_input(INPUT_GET, 'data');
+        echo(login($db,$data));
+    }
+
+    if($type == "isconnected"){
+        if(isset($_SESSION['profile_id'])){
+            echo "connected";
+        } else {
+            echo "notconnected";
+        }
+    }
+
+    if($type == "getLogin"){
+        echo $_SESSION['firstname'];
+    }
+
+    if($type == "logout"){
+        $_SESSION['firstname']=null;
+        $_SESSION['profile_id']=null;
+    }
+
+    if($type == "register"){
+        $data = filter_input(INPUT_GET, 'data');
+        echo(register($db,$data));
+    }
+
+    if($type == "getBooking"){
+        echo(getBooking($db));
+    }
 }
 

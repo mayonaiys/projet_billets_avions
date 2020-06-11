@@ -17,13 +17,13 @@ include 'php/controler.php';
 
          <link rel="stylesheet" href="css/style.css">
          <script src="js/multirange.js"></script>
+         <script src="js/script.js"></script>
          <script src="js/ajax.js"></script>
 
         <script>
             var passengerNumber = <?php echo($_SESSION['nbPassengers']); ?>
         </script>
 
-         <script src="js/passenger_functions.js"></script>
     </head>
 <body style="background-image:url('data/background.jpg'); background-size: cover;">
 
