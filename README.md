@@ -13,10 +13,11 @@ Canada Airline est un site de réserveration de billets d'avions où la recherch
 ou du code des aéroports. Il est aussi possible de choisir le nombre de passagers de plus et de moins de 4 ans (si un passager a moins de 4 ans
 le prix de son billet (taxes comprises) est divisé par deux). Les vols disponibles sont affichés dans une liste ou il est possible de choisir le
 vol qui nous intéresse. Lorsqu'un vol est séléctionné, il faut ensuite remplir les informations de chaque passagers. Lorsque la réservation est confirmée
-le prix des billets est affiché pour chaque passager et le prix total est affiché en bas de page.
+le prix des billets est affiché pour chaque passager et le prix total est affiché en bas de page. Il est ensuite possible pour l'utilisateur de télécharger son billet au format pdf.
 
 ### Ajout en plus des exigeances
 -Connexion avec un compte sur le site et possibilité d'inscription
+-Panel utilisateur avec une liste des billets réservés
 -Bannière avec des prix en réduction 
 -Recherche avec un filtre supplémentaire de tranche de prix
 -Enregistrement des réservations et des informations des passagers dans la BDD
