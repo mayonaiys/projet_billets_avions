@@ -339,7 +339,6 @@ function getBooking($bdd){
                                 <td style="text-align: center;">'.$temp['date'].'</td>
                                 <td style="text-align: center;">'.$flight['departureTime'].'</td>
                                 <td style="text-align: center;">'.$flight['arrivalTime'].'</td>
-                                <td style="text-align: center;">test</td>
                             </tr>';
                 $response .= $tempRep;
             }
