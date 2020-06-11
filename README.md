@@ -17,6 +17,7 @@ le prix des billets est affiché pour chaque passager et le prix total est affic
 
 ### Ajout en plus des exigeances
 -Connexion avec un compte sur le site et possibilité d'inscription
+-Panel utilisateur avec une liste des billets réservés
 -Bannière avec des prix en réduction 
 -Recherche avec un filtre supplémentaire de tranche de prix
 -Enregistrement des réservations et des informations des passagers dans la BDD
