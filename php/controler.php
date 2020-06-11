@@ -116,10 +116,10 @@ function displayForms($bdd){
                     <div class="card-body">
                         <h5 class="card-title">Passager n°'.$i.' - VOL '.$_SESSION['flightID'].' : '.$flight['depCity'].' ['.$flight['originAirport'].'] ->  '.$flight['arrivalCity'].' ['.$flight['destinationAirport'].'], départ à '.$flight['departureTime'].', arrivée à '.$flight['arrivalTime'].' le '.$aff_date.'. </h5>
                             <form class="form-inline">
-                                <label style="margin-right: 10px;">Préname</label>
-                                <input type="text" class="form-control mb-2 mr-sm-2" id="firstname'.$i.'" placeholder="Entrez un préname">
-                                <label style="margin-right: 10px;">name</label>
-                                <input type="text" class="form-control mb-2 mr-sm-2" id="name'.$i.'" placeholder="Entrez un name">
+                                <label style="margin-right: 10px;">Prénom</label>
+                                <input type="text" class="form-control mb-2 mr-sm-2" id="firstname'.$i.'" placeholder="Entrez un prénom">
+                                <label style="margin-right: 10px;">nom</label>
+                                <input type="text" class="form-control mb-2 mr-sm-2" id="name'.$i.'" placeholder="Entrez un nom">
                                 <label style="margin-right: 10px;">Email</label>
                                 <input type="email" class="form-control mb-2 mr-sm-2" id="mail'.$i.'" placeholder="Entrez un email">
                                 <label style="margin-right: 10px;">Date de naissance</label>
