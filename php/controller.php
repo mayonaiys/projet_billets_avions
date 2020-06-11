@@ -218,7 +218,7 @@ function saveBooking($bdd){
     $_SESSION['booking_id'] = $bdd->lastInsertId();
 }
 
-function showPrice($bdd,$json){
+function showPrice($json){
     //Décodage du fichier json
     $data = json_decode($json,true);
     $faresArray = array();
@@ -235,6 +235,7 @@ function showPrice($bdd,$json){
         $charges = $_SESSION['charges'];
         if($interval<1460){
             $fare = $fare/2;
+            $charges = $charges/2;
         }
         array_push($temp,$fare,$charges);
         array_push($faresArray,$temp);

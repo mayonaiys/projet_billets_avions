@@ -54,6 +54,7 @@ function confirm() {
 
 
 function insertionFares(json) {
+    console.log(json);
     let data = JSON.parse(json);
     let totalPrice = 0;
     for(let i = 1; i <= passengerNumber; i++){
