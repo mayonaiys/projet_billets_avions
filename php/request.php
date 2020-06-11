@@ -66,5 +66,9 @@ if(!empty($type)){
     if($type == "getBooking"){
         echo(getBooking($db));
     }
+
+    if($type == "getCheapestFlights"){
+        echo(getRandomFlights($db));
+    }
 }
 

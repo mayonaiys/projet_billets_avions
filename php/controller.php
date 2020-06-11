@@ -26,7 +26,6 @@ function getAvailableFlights($bdd,$json){
     //Sauvegarde de la date de départ via les sessions
     $_SESSION['flight_date'] = $data['depDate'];
 
-
     //Récupération de la date du jour
     $date = getdate();
     $date = "".$date['year']."-".$date['mon']."-".$date['mday'];
@@ -62,7 +61,6 @@ function getAvailableFlights($bdd,$json){
         } else if($interval <= 21) {
             $interval = 21;
         }
-
         $fareRequest->bindParam(':dateDep', $interval, PDO::PARAM_INT);
         if($day >= 0 && $day <= 4){
             $weFlights = 0;
@@ -325,6 +323,46 @@ function getBooking($bdd){
         }
     }
     return $response;
+}
+
+function getRandomFlights($bdd){
+    $randomFlights = $bdd->prepare('SELECT * FROM flights ORDER BY RAND() LIMIT 3');
+    $randomFlights->execute();
+    $response = [];
+    while(($flight = $randomFlights->fetch())!=0){
+
+        $dateToDeparture = getDateToDeparture();
+        $today = date('Y-m-d');
+        $tempDate = date('w',strtotime("$today +$dateToDeparture day"));
+
+        $difference = $tempDate-$flight['dayOfWeek'];
+        $dateToDeparture = $dateToDeparture-$difference-1;
+
+        $discount = random_int(10,50);
+
+        $dateDep = date('Y-m-d',strtotime("$today +$dateToDeparture day"));
+
+        $cities = $bdd->prepare('SELECT a1.city as dep, a2.city as arrival FROM airport a1, airport a2 WHERE a1.airportcode=:depCode AND a2.airportcode=:arrCode');
+        $cities->bindParam(':depCode',$flight['originAirport'],PDO::PARAM_STR);
+        $cities->bindParam(':arrCode',$flight['destinationAirport'],PDO::PARAM_STR);
+        $cities->execute();
+        $cities = $cities->fetch();
+
+        $temp = '<div class="card-body">
+                     <h5 class="card-title">Bon plan !</h5>
+                     <p class="card-text">'.(string)$discount.'% de réduction sur un aller : '.$cities['dep']." [".$flight['originAirport']."] -> ".$cities['arrival']." [".$flight['destinationAirport'].'] le '.$dateDep.'</p>
+                     <p class="card-text" style="text-align: right;">Prix : (TTC)</p>
+                 </div>';
+        array_push($response,$temp);
+    }
+    $response=json_encode($response);
+    return $response;
+}
+
+function getDateToDeparture(){
+    $tab = [10,21];
+    $rdm = random_int(0,2);
+    return $tab[$rdm];
 }
 
 ?>
