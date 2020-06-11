@@ -235,13 +235,13 @@ function saveBooking($bdd){
     $add->execute();
 }
 
-//Fonction de récupération
+//Fonction de récupération des prix des billets
 function showPrice($json){
     //Décodage du fichier json
     $data = json_decode($json,true);
     $faresArray = array();
     for($i=0; $i< sizeof($data); $i++){
-        //On trouve l'intervale de temps entre la date actuelle et celle du vol pour déterminer le prix du billet
+        //On trouve l'intervale de temps entre la date actuelle et l'age du passager pour déterminer le prix du billet
         $date = getdate();
         $date = "".$date['year']."-".$date['mon']."-".$date['mday'];
         $date = new DateTime($date);
@@ -252,7 +252,7 @@ function showPrice($json){
         $temp = array();
         $fare = (float)$_SESSION['fare'];
         $charges = (float)$_SESSION['charges'];
-        if($interval<1460){
+        if($interval<1460){ //Si le passager a moins de 4 ans le prix du billet et les charges sont divisées
             $fare = $fare/2;
             $charges = $charges/2;
         }
