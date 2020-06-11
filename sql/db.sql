@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le :  mar. 09 juin 2020 à 20:00
+-- Généré le :  jeu. 11 juin 2020 à 09:12
 -- Version du serveur :  5.7.21
 -- Version de PHP :  7.2.4
 
@@ -30,11 +30,11 @@ SET time_zone = "+00:00";
 
 DROP TABLE IF EXISTS `airport`;
 CREATE TABLE IF NOT EXISTS `airport` (
-  `airportCode` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `city` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `airportCode` varchar(5) NOT NULL,
+  `city` varchar(30) DEFAULT NULL,
   `latitude` double DEFAULT NULL,
   `longitude` double DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `airport`
@@ -15729,12 +15729,13 @@ INSERT INTO `flights` (`ID`, `route`, `distanceKm`, `originAirport`, `destinatio
 DROP TABLE IF EXISTS `profile`;
 CREATE TABLE IF NOT EXISTS `profile` (
   `profile_id` int(11) NOT NULL AUTO_INCREMENT,
-  `prenom` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nom` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `mail` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `birth` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `firstname` varchar(30) NOT NULL,
+  `name` varchar(30) NOT NULL,
+  `mail` varchar(40) NOT NULL,
+  `birth` varchar(15) NOT NULL,
+  `password` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`profile_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
