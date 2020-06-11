@@ -67,8 +67,16 @@ if(!empty($type)){
         echo(getBooking($db));
     }
 
-    if($type == "getCheapestFlights"){
+    if($type == "getRandomFlights"){
         echo(getRandomFlights($db));
+    }
+
+    if($type == "saveDiscount"){
+        $data = filter_input(INPUT_GET, 'data');
+        $data = json_decode($data,true);
+        $_SESSION['nbPassengers']=1;
+        $_SESSION['discount']=0;
+        echo($_SESSION['discount']);
     }
 }
 

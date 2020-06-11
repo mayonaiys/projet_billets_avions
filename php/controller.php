@@ -40,7 +40,7 @@ function getAvailableFlights($bdd,$json){
     $dateDeparture = $data['depDate'];
     list($yDep,$mDep,$dDep) = explode("-", $dateDeparture);
     $timeStamp = mktime(0,0,0,$mDep,$dDep,$yDep);
-    $day = date('w', $timeStamp)-1;
+    $day = date('w', $timeStamp);
 
     //Requêtes en fonctions des données insérées par l'utilisateur
     $request = $bdd->prepare('SELECT ID, route, departureTime, arrivalTime FROM flights WHERE originAirport=:depAirport AND destinationAirport=:arrivalAirport AND dayOfWeek=:dayOfWeek');
@@ -51,7 +51,7 @@ function getAvailableFlights($bdd,$json){
 
     $newResponse = "";
     while(($response = $request->fetch())!=0){
-        $fareRequest = $bdd->prepare('SELECT f.fare, a1.surcharge as sDep, a2.surcharge as sArrival FROM fares f, airportsurcharges a1, airportsurcharges a2 WHERE f.route=:route AND f.dateToDeparture=:dateDep AND f.weFlights=:weFlights AND f.fare > :minPrice AND f.fare < :maxPrice AND a1.airportCode=:depAirport AND a2.airportCode=:arrivalAirport');
+        $fareRequest = $bdd->prepare('SELECT fare FROM fares WHERE route=:route AND dateToDeparture=:dateDep AND weFlights=:weFlights AND fare > :minPrice AND fare < :maxPrice');
         $fareRequest->bindParam(':route', $response['route'], PDO::PARAM_STR);
         if($interval == 0 ){
             $interval = 0;
@@ -62,24 +62,36 @@ function getAvailableFlights($bdd,$json){
         } else if($interval <= 21) {
             $interval = 21;
         }
-
         $fareRequest->bindParam(':dateDep', $interval, PDO::PARAM_INT);
-        if($day >= 0 && $day <= 4){
+        if($day >= 1 && $day <= 5){
             $weFlights = 0;
-        } else {
+        } else if($day == 0 || $day == 6){
             $weFlights = 1;
         }
         $fareRequest->bindParam(':weFlights',$weFlights, PDO::PARAM_INT);
         $fareRequest->bindParam(':minPrice', $data['minPrice'], PDO::PARAM_INT);
         $fareRequest->bindParam(':maxPrice', $data['maxPrice'], PDO::PARAM_INT);
-        $fareRequest->bindParam(':depAirport', $data['depAirport'], PDO::PARAM_STR);
-        $fareRequest->bindParam(':arrivalAirport', $data['arrivalAirport'], PDO::PARAM_STR);
         $fareRequest->execute();
 
         if(($fareResponse = $fareRequest->fetch())!=0){
             //Sauvegarde du tarif et des charges via les sessions
             $_SESSION['fare']=$fareResponse['fare'];
-            $_SESSION['charges']=$fareResponse['sDep'] + $fareResponse['sArrival'];
+            $_SESSION['charges']=0;
+
+            //Récupération des surcharges s'il y en a
+            $surchargesDep=$bdd->prepare('SELECT surcharge FROM airportsurcharges WHERE airportCode=:code');
+            $surchargesDep->bindParam(':code',$data['depAirport'],PDO::PARAM_STR);
+            $surchargesDep->execute();
+            if(!empty(($surchargesDep = $surchargesDep->fetch()))){
+                $_SESSION['charges']= $_SESSION['charges'] +$surchargesDep['surcharge'];
+            }
+
+            $surchargesArrival=$bdd->prepare('SELECT surcharge FROM airportsurcharges WHERE airportCode=:code');
+            $surchargesArrival->bindParam(':code',$data['arrivalAirport'],PDO::PARAM_STR);
+            $surchargesArrival->execute();
+            if(!empty(($surchargesArrival = $surchargesArrival->fetch()))){
+                $_SESSION['charges']= $_SESSION['charges']+$surchargesArrival['surcharge'];
+            }
 
             $fareWithTaxes = $_SESSION['fare'] + $_SESSION['charges'];
             $temp = '<p style="display: none;">$</p>
@@ -231,11 +243,16 @@ function showPrice($json){
         $interval = $birthDate->diff($date);
         $interval =  $interval->days;
         $temp = array();
-        $fare = $_SESSION['fare'];
-        $charges = $_SESSION['charges'];
+        $fare = (float)$_SESSION['fare'];
+        $charges = (float)$_SESSION['charges'];
         if($interval<1460){
             $fare = $fare/2;
             $charges = $charges/2;
+        }
+        if(isset($_SESSION['discount'])){
+            $fare=$fare - (($_SESSION['discount']/100)*$fare);
+            $charges=$charges - (($_SESSION['discount']/100)*$charges);
+            $_SESSION['discount']=null;
         }
         array_push($temp,$fare,$charges);
         array_push($faresArray,$temp);
@@ -358,14 +375,11 @@ function getRandomFlights($bdd){
 
         $dateToDeparture = getDateToDeparture();
         $today = date('Y-m-d');
-        $tempDate = date('w',strtotime("$today +$dateToDeparture day"));
+        $tempDate = date('w',strtotime("$today +$dateToDeparture day")); //Jour de la semaine
 
-        $difference = $tempDate-$flight['dayOfWeek'];
-        $dateToDeparture = $dateToDeparture-$difference-1;
-
-        $discount = random_int(10,50);
-
-        $dateDep = date('Y-m-d',strtotime("$today +$dateToDeparture day"));
+        $difference = $flight['dayOfWeek']-$tempDate;
+        $newDateToDeparture = $dateToDeparture+$difference;
+        $dateDep = date('Y-m-d',strtotime("$today +$newDateToDeparture day"));
 
         $cities = $bdd->prepare('SELECT a1.city as dep, a2.city as arrival FROM airport a1, airport a2 WHERE a1.airportcode=:depCode AND a2.airportcode=:arrCode');
         $cities->bindParam(':depCode',$flight['originAirport'],PDO::PARAM_STR);
@@ -373,15 +387,42 @@ function getRandomFlights($bdd){
         $cities->execute();
         $cities = $cities->fetch();
 
-        $fare = $bdd->prepare('SELECT fare FROM fares WHERE route=:route AND dateToDeparture=:dateDep ');
+        if($newDateToDeparture<$dateToDeparture){
+            if($dateToDeparture==10){
+                $dateToDeparture=21;
+            }
+        }
+
+        $fare = $bdd->prepare('SELECT fare FROM fares WHERE route=:route AND dateToDeparture=:dateToDeparture');
         $fare->bindParam(':route',$flight['route'],PDO::PARAM_STR);
+        $fare->bindParam(':dateToDeparture',$dateToDeparture,PDO::PARAM_STR);
         $fare->execute();
         $fare = $fare->fetch()['fare'];
 
+        $discount = random_int(10,50);
+        $discountedFare = $fare - (($discount/100)*$fare);
+        $_SESSION['fare'] = $discountedFare;
+        $_SESSION['charges']=0;
+
+        //Récupération des surcharges s'il y en a
+        $surchargesDep=$bdd->prepare('SELECT surcharge FROM airportsurcharges WHERE airportCode=:code');
+        $surchargesDep->bindParam(':code',$flight['originAirport'],PDO::PARAM_STR);
+        $surchargesDep->execute();
+        if(!empty(($surchargesDep = $surchargesDep->fetch()))){
+            $_SESSION['charges']= $_SESSION['charges'] +$surchargesDep['surcharge'];
+        }
+
+        $surchargesArrival=$bdd->prepare('SELECT surcharge FROM airportsurcharges WHERE airportCode=:code');
+        $surchargesArrival->bindParam(':code',$flight['destinationAirport'],PDO::PARAM_STR);
+        $surchargesArrival->execute();
+        if(!empty(($surchargesArrival = $surchargesArrival->fetch()))){
+            $_SESSION['charges']= $_SESSION['charges']+$surchargesArrival['surcharge'];
+        }
+
         $temp = '<div class="card-body">
                      <h5 class="card-title">Bon plan !</h5>
-                     <p class="card-text">'.(string)$discount.'% de réduction sur un aller : '.$cities['dep']." [".$flight['originAirport']."] -> ".$cities['arrival']." [".$flight['destinationAirport'].'] le '.$dateDep.'</p>
-                     <p class="card-text" style="text-align: right;">Prix : '.$fare.' (HT)</p>
+                     <p class="card-text">'.(string)$discount." ".$flight['ID'].'% de réduction sur un vol '.$cities['dep']." [".$flight['originAirport']."] -> ".$cities['arrival']." [".$flight['destinationAirport'].'] le '.$dateDep.': <strong>'.$discountedFare.'€ (TCC)</strong> au lieu de <strong>'.$fare.'€ (TTC)</strong></p>
+                     <input class="btn btn-success" type="button" value="J\'en profite!" onclick="selectDiscountFlight(\''.$flight['ID'].'\','.$discount.')">
                  </div>';
         array_push($response,$temp);
     }
@@ -391,7 +432,7 @@ function getRandomFlights($bdd){
 
 function getDateToDeparture(){
     $tab = [10,21];
-    $rdm = random_int(0,2);
+    $rdm = random_int(0,1);
     return $tab[$rdm];
 }
 

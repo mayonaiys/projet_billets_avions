@@ -38,10 +38,10 @@ $(document).ready(function () {
         },"type=completion&data="+val);
     });
     ajaxRequest("GET","php/request.php",displayIndex,"type=isconnected");
-    ajaxRequest("GET","php/request.php",displayCheapestFlights,"type=getCheapestFlights");
+    ajaxRequest("GET","php/request.php",displayRandomFlights,"type=getRandomFlights");
 });
 
-function displayCheapestFlights(response){
+function displayRandomFlights(response){
     let array = JSON.parse(response);
     for(let i = 1; i<=3;i++){
         document.getElementById('c'+i).innerHTML = array[i-1];
@@ -93,7 +93,7 @@ function displayIndex(response){
 function research() {
 
     let tab = {};
-
+    let valid = true;
     if(document.getElementById("departure").value !== ""){
         let departure = document.getElementById("departure").value;
         departure = departure.split('-');
@@ -101,6 +101,7 @@ function research() {
         document.getElementById("departure").classList = "form-control mb-2 mr-sm-2";
     } else {
         document.getElementById("departure").classList = "form-control mb-2 mr-sm-2 is-invalid";
+        valid = false;
     }
 
     if(document.getElementById("arrival").value !== ""){
@@ -110,6 +111,7 @@ function research() {
         document.getElementById("arrival").classList = "form-control mb-2 mr-sm-2";
     } else {
         document.getElementById("arrival").classList = "form-control mb-2 mr-sm-2 is-invalid";
+        valid = false;
     }
 
     if(document.getElementById("date").value !== ""){
@@ -117,28 +119,31 @@ function research() {
         document.getElementById("date").classList = "form-control mb-2 mr-sm-2";
     } else {
         document.getElementById("date").classList = "form-control mb-2 mr-sm-2 is-invalid";
+        valid = false;
     }
 
     if(document.getElementById("nbPassengerAdult").value !== "+ de 4 ans"){
         tab["nbrAdults"] = parseInt(document.getElementById("nbPassengerAdult").value);
         document.getElementById("nbPassengerAdult").classList = "custom-select mr-sm-2";
     } else {
-        document.getElementById("nbPassengerAdult").classList = "custom-select mr-sm-2 is-invalid"
+        document.getElementById("nbPassengerAdult").classList = "custom-select mr-sm-2 is-invalid";
+        valid = false;
     }
 
     if(document.getElementById("nbPassengerChild").value !== "- de 4 ans"){
         tab["nbrChildren"] = parseInt(document.getElementById("nbPassengerChild").value);
         document.getElementById("nbPassengerChild").classList = "custom-select mr-sm-2";
     } else {
-        document.getElementById("nbPassengerChild").classList = "custom-select mr-sm-2 is-invalid"
+        tab["nbrChildren"] = 0;
     }
 
     tab["minPrice"] = parseInt(document.getElementById("min_value").innerText);
     tab["maxPrice"] = parseInt(document.getElementById("max_value").innerText);
 
     document.getElementById("reserve").classList = "btn btn-primary disabled";
-    ajaxRequest("GET", "php/request.php",displayList,"type=research&data="+JSON.stringify(tab));
-
+    if(valid){
+        ajaxRequest("GET", "php/request.php",displayList,"type=research&data="+JSON.stringify(tab));
+    }
 }
 
 let oldID ="";
@@ -185,4 +190,14 @@ function signin(){
             document.getElementById('error').innerHTML='<br><section class="container alert alert-danger">Email ou mot de passe incorrect.</section>';
         }
     },"type=login&data="+JSON.stringify(tab));
+}
+
+function selectDiscountFlight(id,discount){
+    let tabID = {id};
+    let tabDiscount = {discount};
+    ajaxRequest("GET","php/request.php",null,"type=saveDiscount&data="+JSON.stringify(tabDiscount));
+    ajaxRequest("GET","php/request.php",function (response) {
+        console.log(response);
+    },"type=saveFlightID&data="+JSON.stringify(tabID));
+    document.location.href="viewconfirm.php";
 }

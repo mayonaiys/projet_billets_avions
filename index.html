@@ -47,7 +47,6 @@
                     <div class="col-md-7 card" style="background-color: rgba(255, 255, 255, 0.8);" id="c1">
                     </div>
                 </div>
-                <div class="carousel-caption d-none d-md-block"></div>
             </div>
 
             <div class="carousel-item">
@@ -59,7 +58,6 @@
                     <div class="col-md-7 card" style="background-color: rgba(255, 255, 255, 0.8);" id="c2">
                     </div>
                 </div>
-                <div class="carousel-caption d-none d-md-block"></div>
             </div>
 
             <div class="carousel-item">
@@ -71,7 +69,6 @@
                     <div class="col-md-7 card" style="background-color: rgba(255, 255, 255, 0.8);" id="c3">
                     </div>
                 </div>
-                <div class="carousel-caption d-none d-md-block"></div>
             </div>
         </div>
         <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
@@ -91,19 +88,19 @@
             <div style="background-color: white; ">
                 <div class="card-body">
                     <h5 class="card-title">Rechercher un vol :</h5>
-                    <label>Ville de départ :</label>
+                    <label>Ville de départ* :</label>
                     <input list="departure_list" type="text" class="form-control mb-2 mr-sm-2" id="departure" placeholder="Ex: Edmonton">
                     <datalist id="departure_list">
                     </datalist>
 
-                    <label>Ville d'arrivée :</label>
+                    <label>Ville d'arrivée* :</label>
                     <input list="arrival_list" type="text" class="form-control mb-2 mr-sm-2" id="arrival" placeholder="Ex: Quebec">
                     <datalist id="arrival_list">
                     </datalist>
-                    <label>Date :</label>
+                    <label>Date* :</label>
                     <input type="date" class="form-control mb-2 mr-sm-2" id="date" value="" min="2020-01-01" max="">
 
-                    <label>Nombre de passagers :</label>
+                    <label>Nombre de passagers* :</label>
                     <select class="custom-select mr-sm-2" id="nbPassengerAdult">
                         <option selected>+ de 4 ans</option>
                         <option value="1">1</option>
@@ -121,7 +118,6 @@
 
                     <select class="custom-select mr-sm-2" id="nbPassengerChild">
                         <option selected>- de 4 ans</option>
-                        <option value="0">0</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -143,9 +139,8 @@
                         </div>
                         <span id="max_value" ></span>
                     </div>
-
+                    <small>*remplissage obligatoire.</small>
                     <br>
-
                     <div class="row justify-content-center">
                         <button type="button" class="btn btn-primary" id="search" onclick="research()">Valider</button>
                     </div>
