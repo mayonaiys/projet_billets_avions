@@ -363,7 +363,7 @@ function getClientInfo($db,$id){
 //Fonction de récupération des infos sur un vol
 function getFlightInfo($db,$id){
     $request= $db->prepare("SELECT flights.*,air1.*,air2.airportCode as airportCode2,air2.city as city2,air2.latitude as latitude2,air2.longitude as longitude2 FROM flights INNER JOIN airport air1 ON flights.originAirport = air1.airportCode INNER JOIN airport air2 ON flights.destinationAirport=air2.airportCode WHERE flights.ID=:ID");
-    $request->bindParam(':ID', $id, PDO::PARAM_INT);
+    $request->bindParam(':ID', $id, PDO::PARAM_STR);
     $request->execute();
     return $request->fetch();
 }

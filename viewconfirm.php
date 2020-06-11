@@ -20,7 +20,11 @@ include 'php/controller.php';
          <script src="js/confirm_script.js"></script>
          <script src="js/ajax.js"></script>
 
-        <script>
+         <script src="js/googleMap.js"></script>
+         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRRsa8PNbjYmn63HD1H7usOAmfBNh-DhA&callback=initMap" type="text/javascript"></script>
+
+
+         <script>
             var passengerNumber = <?php echo($_SESSION['nbPassengers']); ?>
         </script>
 
@@ -49,6 +53,8 @@ include 'php/controller.php';
 </div>
 
 <br>
+
+<div id="map"></div>
 
 </body>
 
