@@ -33,7 +33,7 @@ if(!empty($type)){
     if($type == "booking"){
         $data = filter_input(INPUT_GET, 'data');
         editClients($db,$data);
-        echo(showPrice($db,$data));
+        echo(showPrice($data));
     }
 
     if($type == "login"){
@@ -65,6 +65,10 @@ if(!empty($type)){
 
     if($type == "getBooking"){
         echo(getBooking($db));
+    }
+
+    if($type == "getCheapestFlights"){
+        echo(getRandomFlights($db));
     }
 }
 

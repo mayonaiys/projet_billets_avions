@@ -54,6 +54,7 @@ function confirm() {
 
 
 function insertionFares(json) {
+    console.log(json);
     let data = JSON.parse(json);
     let totalPrice = 0;
     for(let i = 1; i <= passengerNumber; i++){
@@ -63,8 +64,7 @@ function insertionFares(json) {
         document.getElementById('price'+i).innerText="Prix : "+data[i-1][0]+"€ (HT) + "+data[i-1][1]+"€ (Charges) = "+fareWithTaxes+"€ (TTC)";
 
         $("#billet"+i).empty();
-        $("#billet"+i).append('<button onclick="getBillet('+i+')" >récupérer le billet</button>');
-    }
+        $("#billet"+i).append('<button class="btn btn-primary" onclick="getBillet('+i+')" >Récupérer le billet</button>');    }
     document.getElementById('totalprice').innerHTML='<div class="card">\n' +
         '                    <div class="card-body">\n' +
         '                        <h6>Prix total : '+totalPrice+'€ (TTC)</h6>\n' +

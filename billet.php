@@ -22,7 +22,7 @@ $flightInfo = getFlightInfo($db,$_SESSION["flightID"]);
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Billet</title>
 
     <script>
         window.onload = window.print();
