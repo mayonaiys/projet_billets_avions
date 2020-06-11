@@ -126,6 +126,7 @@ function displayForms($bdd){
                                 <input type="date" class="form-control mb-2 mr-sm-2" id="date'.$i.'" value="" min="1920-01-01" max="">
                                 <label id="price'.$i.'" style="display: none"></label>
                             </form>
+                            <div id="billet'.$i.'"></div>
                     </div>
                 </div>
                 <br>';
@@ -214,6 +215,7 @@ function saveBooking($bdd){
 
     $add->execute();
 
+    $_SESSION['booking_id'] = $bdd->lastInsertId();
 }
 
 function showPrice($bdd,$json){
@@ -312,6 +314,7 @@ function getBooking($bdd){
                 $flight->bindParam(':flightID',$temp['flight_id'], PDO::PARAM_STR);
                 $flight->execute();
                 $flight = $flight->fetch();
+
                 $tempRep = '<tr>
                                 <td style="text-align: center;">' .$temp['flight_id'].'</td>
                                 <td style="text-align: center;">'.$flight['route'].'</td>
@@ -327,4 +330,22 @@ function getBooking($bdd){
     return $response;
 }
 
+function getClientInfo($db,$id){
+    $request= $db->prepare("SELECT * FROM profile WHERE profile_id=:profile_id");
+    $request->bindParam(':profile_id', $id, PDO::PARAM_INT);
+
+    $request->execute();
+
+    return $request->fetch();
+}
+
+function getFlightInfo($db,$id){
+
+    $request= $db->prepare("SELECT flights.*,air1.*,air2.airportCode as airportCode2,air2.city as city2,air2.latitude as latitude2,air2.longitude as longitude2 FROM flights INNER JOIN airport air1 ON flights.originAirport = air1.airportCode INNER JOIN airport air2 ON flights.destinationAirport=air2.airportCode WHERE flights.ID=:ID");
+    $request->bindParam(':ID', $id, PDO::PARAM_INT);
+
+    $request->execute();
+
+    return $request->fetch();
+}
 ?>
