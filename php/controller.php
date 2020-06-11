@@ -378,6 +378,7 @@ function getRandomFlights($bdd){
     $randomFlights = $bdd->prepare('SELECT * FROM flights ORDER BY RAND() LIMIT 3');
     $randomFlights->execute();
     $response = [];
+    $i = 1;
     while(($flight = $randomFlights->fetch())!=0){
 
         $dateToDeparture = getDateToDeparture();
@@ -408,30 +409,35 @@ function getRandomFlights($bdd){
 
         $discount = random_int(10,50);
         $discountedFare = $fare - (($discount/100)*$fare);
-        $_SESSION['fare'] = $discountedFare;
-        $_SESSION['charges']=0;
+        $_SESSION['fare'.$i] = $discountedFare;
+        $_SESSION['charges'.$i]=0;
 
         //Récupération des surcharges s'il y en a
         $surchargesDep=$bdd->prepare('SELECT surcharge FROM airportsurcharges WHERE airportCode=:code');
         $surchargesDep->bindParam(':code',$flight['originAirport'],PDO::PARAM_STR);
         $surchargesDep->execute();
         if(!empty(($surchargesDep = $surchargesDep->fetch()))){
-            $_SESSION['charges']= $_SESSION['charges'] +$surchargesDep['surcharge'];
+            $_SESSION['charges'.$i]= $_SESSION['charges'.$i] +$surchargesDep['surcharge'];
         }
 
         $surchargesArrival=$bdd->prepare('SELECT surcharge FROM airportsurcharges WHERE airportCode=:code');
         $surchargesArrival->bindParam(':code',$flight['destinationAirport'],PDO::PARAM_STR);
         $surchargesArrival->execute();
         if(!empty(($surchargesArrival = $surchargesArrival->fetch()))){
-            $_SESSION['charges']= $_SESSION['charges']+$surchargesArrival['surcharge'];
+            $_SESSION['charges'.$i]= $_SESSION['charges'.$i]+$surchargesArrival['surcharge'];
         }
+
+        $_SESSION['flightID'.$i]=$flight['ID'];
+        $_SESSION['discount'.$i]=$discount;
+        $_SESSION['flight_date'.$i]=$dateDep;
 
         $temp = '<div class="card-body">
                      <h5 class="card-title">Bon plan !</h5>
                      <p class="card-text">'.(string)$discount.'% de réduction sur un vol '.$cities['dep']." [".$flight['originAirport']."] -> ".$cities['arrival']." [".$flight['destinationAirport'].'] le '.$dateDep.': <strong>'.$discountedFare.'€ (TCC)</strong> au lieu de <strong>'.$fare.'€ (TTC)</strong></p>
-                     <input class="btn btn-success" type="button" value="J\'en profite!" onclick="selectDiscountFlight(\''.$flight['ID'].'\','.$discount.')">
+                     <a class="btn btn-success" type="button" href="php/request.php?type=saveDiscountFlight&data='.$i.'">J\'en profite!</a>
                  </div>';
         array_push($response,$temp);
+        $i++;
     }
     $response=json_encode($response);
     return $response;

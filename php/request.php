@@ -71,12 +71,16 @@ if(!empty($type)){
         echo(getRandomFlights($db)); //Appelle la fonction de récupération d'avions aléatoires
     }
 
-    if($type == "saveDiscount"){
+    if($type == "saveDiscountFlight"){
         $data = filter_input(INPUT_GET, 'data');
-        $data = json_decode($data,true);
         $_SESSION['nbPassengers']=1; //Sauvegarde le nombre de passagers dans la session
-        $_SESSION['discount']=$data['disount']; //Sauvegarde la réduction dans la session
-        echo($_SESSION['discount']);
+        $_SESSION['discount']=$_SESSION['discount'.$data]; //Sauvegarde la réduction dans la session
+        $_SESSION['flightID']=$_SESSION['flightID'.$data];
+        $_SESSION['fare']=$_SESSION['fare'.$data];
+        $_SESSION['charges']=$_SESSION['charges'.$data];
+        $_SESSION['flight_date']=$_SESSION['flight_date'.$data];
+        echo($_SESSION['discount']." ".$_SESSION['flightID']);
+        header('Location: ../viewconfirm.php');
     }
 }
 

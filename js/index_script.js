@@ -160,7 +160,6 @@ function selectFlight(id){
 }
 
 function displayList(response){
-    console.log(response);
     document.getElementById('list').innerHTML = response;
     let char = "$";
     let it = 0;
@@ -190,14 +189,4 @@ function signin(){
             document.getElementById('error').innerHTML='<br><section class="container alert alert-danger">Email ou mot de passe incorrect.</section>';
         }
     },"type=login&data="+JSON.stringify(tab));
-}
-
-function selectDiscountFlight(id,discount){
-    let tabID = {id};
-    let tabDiscount = {discount};
-    ajaxRequest("GET","php/request.php",null,"type=saveDiscount&data="+JSON.stringify(tabDiscount)); //Requête ajax pour enregister la réduction
-    ajaxRequest("GET","php/request.php",function (response) { //Requête ajax pour enregistrer l'id du vol
-        console.log(response);
-    },"type=saveFlightID&data="+JSON.stringify(tabID));
-    document.location.href="viewconfirm.php";
 }
