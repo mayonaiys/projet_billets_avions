@@ -81,5 +81,21 @@ if(!empty($type)){
         echo($_SESSION['discount']." ".$_SESSION['flightID']);
         header('Location: ../viewconfirm.php');
     }
+
+
+    if($type == "coordinates"){
+
+        $flightInfo = getFlightInfo($db,$_SESSION["flightID"]);
+
+        $data = [];
+
+        $data["latitude"] = $flightInfo["latitude"];
+        $data["longitude"] = $flightInfo["longitude"];
+        $data["latitude1"] = $flightInfo["latitude2"];
+        $data["longitude1"] = $flightInfo["longitude2"];
+
+        $jsonA = json_encode($data);
+        echo($jsonA);
+    }
 }
 
