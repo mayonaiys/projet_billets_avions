@@ -44,10 +44,11 @@ function getAvailableFlights($bdd,$json){
     $day = date('w', $timeStamp);
 
     //Requêtes en fonctions des données insérées par l'utilisateur
-    $request = $bdd->prepare('SELECT ID, route, departureTime, arrivalTime FROM flights WHERE originAirport=:depAirport AND destinationAirport=:arrivalAirport AND dayOfWeek=:dayOfWeek');
+    $request = $bdd->prepare('SELECT ID, route, departureTime, arrivalTime, flightSize FROM flights WHERE originAirport=:depAirport AND destinationAirport=:arrivalAirport AND dayOfWeek=:dayOfWeek AND flightSize>=:nbPassengers');
     $request->bindParam(':depAirport', $data['depAirport'], PDO::PARAM_STR);
     $request->bindParam(':arrivalAirport', $data['arrivalAirport'], PDO::PARAM_STR);
     $request->bindParam(':dayOfWeek', $day, PDO::PARAM_INT);
+    $request->bindParam(':nbPassengers',$_SESSION['nbPassengers'],PDO::PARAM_INT);
     $request->execute();
 
     $newResponse = "";
@@ -104,6 +105,7 @@ function getAvailableFlights($bdd,$json){
                          <td style="text-align: center;">' .$response['ID'].'</td>
                          <td style="text-align: center;">'.$response['route'].'</td>
                          <td style="text-align: center;">'.$dateDeparture.'</td>
+                         <td style="text-align: center;">'.$response['flightSize'].'</td>
                          <td style="text-align: center;">'.$response['departureTime'].'</td>
                          <td style="text-align: center;">'.$response['arrivalTime'].'</td>
                          <td style="text-align: center;">'.($fareWithTaxes/2)."€".'</td>
@@ -233,6 +235,17 @@ function saveBooking($bdd){
     $add->bindParam(':profile_list', $_SESSION['profile_list'], PDO::PARAM_STR);
 
     $add->execute();
+
+    $flightSize = $bdd->prepare('SELECT flightSize FROM flights WHERE ID=:flightID');
+    $flightSize->bindParam(':flightID', $_SESSION['flightID'], PDO::PARAM_STR);
+    $flightSize->execute();
+    $fSize = $flightSize->fetch()['flightSize'];
+    $fSize = $fSize-$_SESSION['nbPassengers'];
+
+    $modifFlightSize = $bdd->prepare('UPDATE flights SET flightSize=:flightSize WHERE ID=:flightID');
+    $modifFlightSize->bindParam(':flightSize',$fSize, PDO::PARAM_INT);
+    $modifFlightSize->bindParam(':flightID', $_SESSION['flightID'], PDO::PARAM_STR);
+    $modifFlightSize->execute();
 }
 
 //Fonction de récupération des prix des billets
