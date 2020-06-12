@@ -142,8 +142,15 @@ function research() {
 
     document.getElementById("reserve").classList = "btn btn-primary disabled";
     if(valid){
-        ajaxRequest("GET", "php/request.php",displayList,"type=research&data="+JSON.stringify(tab));
+        if((tab["nbrChildren"]+tab["nbrAdults"])<=9){
+            ajaxRequest("GET", "php/request.php",displayList,"type=research&data="+JSON.stringify(tab));
+            document.getElementById("errors").innerHTML=null;
+        } else {
+            document.getElementById("errors").innerHTML='<section class="container alert alert-danger">Veuillez choisir moins de 9 passagers !</section>';
+        }
     }
+
+
 }
 
 let oldID ="";
