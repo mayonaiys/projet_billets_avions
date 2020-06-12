@@ -5,16 +5,16 @@ include 'php/controller.php';
 
 //var_dump($_SESSION);
 
-$id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+$id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT); // on récupère l'id du passager;
 
 $profiles = explode(" ",$_SESSION["profile_list"]);
 
 $db = connexbdd();
 
-$client = getClientInfo($db,intval($profiles[$id]));
+$client = getClientInfo($db,intval($profiles[$id])); // on récupère les infos du passager.
 
 
-$flightInfo = getFlightInfo($db,$_SESSION["flightID"]);
+$flightInfo = getFlightInfo($db,$_SESSION["flightID"]); // on récupère les infos du vol
 
 //var_dump($flightInfo);
 ?>
@@ -42,7 +42,7 @@ $flightInfo = getFlightInfo($db,$_SESSION["flightID"]);
     <p> <?php echo($client["name"]." ".$client["firstname"]." (".$client["birth"].")"); ?> </p>
 </div>
 <hr>
-<table style="width: 100%;">
+<table style="width: 100%;text-align: center">
     <tr>
         <td>
             <strong>Vol</strong>
@@ -71,13 +71,17 @@ $flightInfo = getFlightInfo($db,$_SESSION["flightID"]);
             <?php echo($_SESSION["flight_date"]) ?>
         </td>
         <td>
-            <?php echo($flightInfo["city"]." [".$flightInfo["originAirport"]."]<br/>".$flightInfo["departureTime"]."<br/>") ?>
+            <?php echo($flightInfo["departureTime"]."<br/>".$flightInfo["city"]." [".$flightInfo["originAirport"]."]<br/>") ?>
         </td>
         <td>
-            <?php echo($flightInfo["city2"]." [".$flightInfo["destinationAirport"]."]<br/>".$flightInfo["arrivalTime"]."<br/>") ?>
+            <?php echo($flightInfo["arrivalTime"]."<br/>".$flightInfo["city2"]." [".$flightInfo["destinationAirport"]."]<br/>") ?>
         </td>
         <td>
-            <!-- Fonction qui enlève 30 min à l'heure de départ -->
+            <?php
+
+            echo date("H:i", strtotime($flightInfo["departureTime"]) - strtotime("00:30")); // on retire 30 min à l'heure de départ
+
+            ?>
         </td>
         <td>
             1 x 23 Kg

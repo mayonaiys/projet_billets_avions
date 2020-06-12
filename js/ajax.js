@@ -1,8 +1,10 @@
+
+// fonction permettant de faire des requêtes ajax à nos fichiers php
 function ajaxRequest(type, url, callback, data = null){
 
-    let xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest(); // on crée la requête
 
-    if(type !== "POST"){
+    if(type !== "POST"){ // si le type de requête n'est pas du post, on rajoute les data à la fin de l'url
         if(data != null){
             url+="?"+data;
         }
@@ -10,18 +12,18 @@ function ajaxRequest(type, url, callback, data = null){
 
     xhr.open(type, url);
 
-    if(type === "POST"){
+    if(type === "POST"){ // si c'est du post on rajoute le content-Type correspondant
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     }
 
     xhr.onload = () => {
-        httpErrors(xhr.status);
+        httpErrors(xhr.status); // quand on récupère la réponse, on vérifie le status.
         if(callback!=null){
-            callback(xhr.responseText);
+            callback(xhr.responseText); // on appelle la fonction de callback avec la réponse.
         }
     };
 
-    if(type === "POST"){
+    if(type === "POST"){ // si c'est du POST, on envoie les data
         xhr.send(data);
     }else{
         xhr.send();
@@ -29,6 +31,8 @@ function ajaxRequest(type, url, callback, data = null){
 
 }
 
+
+// actions suivant les codes d'erreurs ajax
 function httpErrors(errorCode){
     switch (errorCode) {
         case 200:

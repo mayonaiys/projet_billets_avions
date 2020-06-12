@@ -130,6 +130,7 @@ function displayForms($bdd){
     setlocale (LC_TIME, 'fr_FR');
     $aff_date = strftime("%A %d %B %Y",strtotime($_SESSION['flight_date']));
 
+    // on génère le nombre de forms correspondant
     $newReponse = "";
     for($i = 1; $i < $_SESSION['nbPassengers']+1; $i++){
         $temp = '<div class="card">
@@ -159,7 +160,7 @@ function displayForms($bdd){
 //Fonction de récupération des villes pour la prédiction
 function getCities($db,$data){
 
-    $data .= "%";
+    $data .= "%"; // permet de récupérer tous les noms de villes ou code aéroport commençant par le string envoyé.
 
     $request = $db->prepare('SELECT airportCode,city FROM airport WHERE city like :city or airportCode like :aiportCode limit 10');
     $request->bindParam(':city', $data, PDO::PARAM_STR);
@@ -367,7 +368,7 @@ function getBooking($bdd){
 
 //Fonction de récupération des infos sur l'utilisateur
 function getClientInfo($db,$id){
-    $request= $db->prepare("SELECT * FROM profile WHERE profile_id=:profile_id");
+    $request= $db->prepare("SELECT profile_id,firstname,name,mail,birth FROM profile WHERE profile_id=:profile_id");
     $request->bindParam(':profile_id', $id, PDO::PARAM_INT);
     $request->execute();
     return $request->fetch();

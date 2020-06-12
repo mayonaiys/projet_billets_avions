@@ -1,5 +1,7 @@
 //Script de la page d'accueil
 $(document).ready(function () {
+
+    //requête ajax permettant de récupérer les prix minimum et maximum pour le formulaire
     ajaxRequest("GET", "php/request.php",function(data){
         if(data != ""){
             let json = JSON.parse(data);
@@ -12,12 +14,16 @@ $(document).ready(function () {
         }
         },"type=price_range");
 
+    // on ajoute un listener sur les input de villes pout pouvoir faire de l'autocomplétion avec le serveur
+
     document.getElementById("departure").addEventListener('input', function () {
         let val = this.value;
+        // on envoie une requête pour récupérer la complétion par le serveur
         ajaxRequest("GET", "php/request.php",function(data){
             $("#departure_list").empty();
             if(data != ""){
                 let json = JSON.parse(data);
+                // une fois la réponse reçu, on ajoute les options à la liste
                 for(let i=0; i<json.length; i++){
                     $("#departure_list").append('<option value="'+json[i]["city"]+'-['+json[i]["airportCode"]+']">');
                 }
@@ -37,6 +43,8 @@ $(document).ready(function () {
             }
         },"type=completion&data="+val);
     });
+
+    //requêtes se lançant au load de la page
     ajaxRequest("GET","php/request.php",displayIndex,"type=isconnected");
     ajaxRequest("GET","php/request.php",displayRandomFlights,"type=getRandomFlights");
 });
@@ -92,6 +100,7 @@ function displayIndex(response){
 
 function research() {
 
+    //récupération des données du form
     let tab = {};
     let valid = true;
     if(document.getElementById("departure").value !== ""){
@@ -141,6 +150,8 @@ function research() {
     tab["maxPrice"] = parseInt(document.getElementById("max_value").innerText);
 
     document.getElementById("reserve").classList = "btn btn-primary disabled";
+
+    //si les données sont valides, on les envoies au serveur, puis on récupère les vols résultants
     if(valid){
         if((tab["nbrChildren"]+tab["nbrAdults"])<=9){
             ajaxRequest("GET", "php/request.php",displayList,"type=research&data="+JSON.stringify(tab));
@@ -156,6 +167,7 @@ function research() {
 let oldID ="";
 
 function selectFlight(id){
+    // fonction permettant de sélectionner un vol, et d'indiquer cette sélection au php
     if(oldID!==""){
         document.getElementById(oldID).style = null;
     }

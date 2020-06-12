@@ -1,6 +1,8 @@
 (function() {
 "use strict";
 
+// bibliothèque récupéré sur internet, permettant de faire des multiple range. Quelques fonctions ont été rajoutés à la fin.
+
 var supportsMultiple = self.HTMLInputElement && "valueLow" in HTMLInputElement.prototype;
 
 var descriptor = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value");
@@ -133,14 +135,17 @@ if (typeof module === "undefined") {
 
 })();
 
+/// ----------------------------------------------------
 $(document).ready(function () {
 
+	// fonctions permettant d'afficher les prix correspondants au multirange, pour la sélection de l'interval de prix.
 	let list = document.querySelectorAll('.multirange');
 
 	for(let i=0; i<list.length; i++){
 		list[i].addEventListener('input',function () {
 			let input = document.getElementById("rangePrice");
 
+			// calcul du pourcentage, car les multiple range n'ont des valeurs qu'entre 0 et 100.
 			let percent_min =  input.valueLow;
 			let percent_max =  input.valueHigh;
 

@@ -45,7 +45,7 @@ include 'php/controller.php';
 
     <?php
         $db = connexbdd();
-        displayForms($db);
+        displayForms($db); // affichage du nombre de formulaires correspondant au nombre de passagers
     ?>
     <div id="totalprice"></div>
     <button type="button" class="btn btn-primary" id="confirm" onclick="confirm()">Confirmation</button>

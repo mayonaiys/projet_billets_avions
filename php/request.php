@@ -2,12 +2,15 @@
 //Fichier traitant des requêtes faites en ajax
 session_start();
 
+// on inclut le fichier faisant les requêtes à la bdd
 include 'controller.php';
 
+// on récupère le type de requête de l'utilisateur
 $type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING);
 
 if(!empty($type)){
     $db = connexbdd(); //Connexion à la base de données
+
     if($type=="research"){
         $data = filter_input(INPUT_GET, 'data');
         echo(getAvailableFlights($db,$data)); //Retourne tous les avions disponible en fonction des données entrées par l'utilisateur
